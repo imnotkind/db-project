@@ -1,16 +1,18 @@
+#include "CustomerTable.h"
 #include <iostream>
 #include <sstream>
-#include "CustomerTable.h"
-
-
-
-
 
 
 CustomerTable::CustomerTable() {
 	for (auto schema : this->CustomerTableSchema) {
-		this->table.insert({ schema.name, Column{schema} });
+		this->table.insert({ schema.name, Column{schema.name, schema.max_len, schema.type} });
 	}
+
+	std::visit([](auto&& arg) {
+		arg.emplace_back(Data<std::string>{ "dd" });
+	
+	}, this->table["UNAME"].data_list);
+
 }
 
 bool CustomerTable::load_file(std::ifstream& input_file) {

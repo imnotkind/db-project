@@ -58,8 +58,5 @@
     <ClInclude Include="Column.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="type_holder.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

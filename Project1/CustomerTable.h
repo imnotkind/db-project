@@ -2,12 +2,7 @@
 #include "Table.h"
 
 class CustomerTable : public Table {
-	const std::vector<ColumnSchema> CustomerTableSchema = {
-		{"UNAME", 20, TypeHolder<std::string>{}},
-		{"PASSWD", 20, TypeHolder<std::string>{}},
-		{"ZONE", 6, TypeHolder<std::string>{}},
-	};
-	/*
+
 	const std::vector<ColumnSchema> CustomerTableSchema = {
 		{"UNAME", 20, DataType::string},
 		{"PASSWD", 20, DataType::string},
@@ -23,8 +18,7 @@ class CustomerTable : public Table {
 		{"EMAIL", 50, DataType::string},
 		{"ACTIVE", 6, DataType::boolean},
 	};
-	*/
-	
+
 public:
 	CustomerTable();
 	bool load_file(std::ifstream& input_file);

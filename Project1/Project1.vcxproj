@@ -158,7 +158,6 @@
     <ClInclude Include="DataType.h" />
     <ClInclude Include="CustomerTable.h" />
     <ClInclude Include="Table.h" />
-    <ClInclude Include="type_holder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
