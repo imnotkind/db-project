@@ -18,29 +18,9 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CustomerTable.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Column.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Table.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="products_a.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-    <Text Include="zonecost.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-    <Text Include="customer.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-    <Text Include="lineitem.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data.h">
@@ -61,5 +41,28 @@
     <ClInclude Include="Printer.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ZonecostTable.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="LineitemTable.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ProductsTable.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\customer.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="res\lineitem.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="res\products_a.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="res\zonecost.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
   </ItemGroup>
 </Project>
