@@ -21,7 +21,7 @@ struct TypeHolder {
 
 template <typename T>
 struct Data {
-	std::optional<T> data; //for null values
+	std::optional<T> raw; //for null values
 	using Type = T;
 };
 

@@ -43,6 +43,14 @@ int main()
     products_table.load_file(products_file);
     products_table.show();
     products_file.close();
+
+    std::cout << std::endl;
+
+    Query::Query1(customer_table, zonecost_table);
+
+    std::cout << std::endl;
+
+    Query::Query2(lineitem_table, products_table);
    
 
 
