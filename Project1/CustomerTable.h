@@ -4,22 +4,22 @@
 class CustomerTable : public Table {
 
 	const std::vector<ColumnSchema> CustomerTableSchema = {
-		{"UNAME", 20, DataType::string},
-		{"PASSWD", 20, DataType::string},
-		{"LNAME", 20, DataType::string},
-		{"FNAME", 20, DataType::string},
-		{"ADDR", 50, DataType::string},
-		{"ZONE", 6, DataType::integer},
-		{"SEX", 3, DataType::character},
-		{"AGE", 6, DataType::integer},
-		{"LIMIT", 6, DataType::integer},
-		{"BALANCE", 10, DataType::decimal},
-		{"CREDITCARD", 20, DataType::string},
-		{"EMAIL", 50, DataType::string},
-		{"ACTIVE", 6, DataType::boolean},
+		{"UNAME", 20, TypeHolder<std::string>{}},
+		{"PASSWD", 20, TypeHolder<std::string>{}},
+		{"LNAME", 20, TypeHolder<std::string>{}},
+		{"FNAME", 20, TypeHolder<std::string>{}},
+		{"ADDR", 50, TypeHolder<std::string>{}},
+		{"ZONE", 6, TypeHolder<int>{}},
+		{"SEX", 3, TypeHolder<char>{}},
+		{"AGE", 6, TypeHolder<int>{}},
+		{"LIMIT", 6, TypeHolder<int>{}},
+		{"BALANCE", 10, TypeHolder<double>{}},
+		{"CREDITCARD", 20, TypeHolder<std::string>{}},
+		{"EMAIL", 50, TypeHolder<std::string>{}},
+		{"ACTIVE", 6, TypeHolder<bool>{}},
 	};
 
 public:
 	CustomerTable();
-	bool load_file(std::ifstream& input_file);
+	void load_file(std::ifstream& input_file);
 };

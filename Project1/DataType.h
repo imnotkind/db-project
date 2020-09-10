@@ -8,3 +8,9 @@ enum class DataType {
 	integer,
 	decimal,
 };
+
+/*
+template <typename T>
+constexpr bool is_float = std::is_same<T, float>::value;
+
+*/

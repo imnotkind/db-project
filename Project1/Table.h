@@ -4,13 +4,19 @@
 #include <fstream>
 
 
+using ColumnVariant = DataTypeVariant<Column>;
+
 class Table {
 protected:
-	std::unordered_map<std::string, Column> table; //map key : column name, ordered map for good visualization
+	std::unordered_map<std::string, ColumnVariant> table; //map key : column name
 public:
-	virtual bool load_file(std::ifstream& input_file) = 0;
 	virtual ~Table() {
-
 	}
+	virtual void load_file(std::ifstream& input_file) = 0;
 	void show();
+	template <typename T>
+	void insert_column(ColumnSchema schema) {
+		this->table.insert({ schema.name, Column<T>{schema.name, schema.max_len} });
+	}
+
 };

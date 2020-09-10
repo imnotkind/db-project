@@ -1,4 +1,5 @@
 #include "Table.h"
+#include "Printer.h"
 #include <iostream>
 #include <variant>
 
@@ -6,18 +7,16 @@ void Table::show() {
 
     for (auto const& [column_name, column] : this->table)
     {
-        std::cout << column_name << " ";         // string (key)
+        std::cout << column_name << " | ";
 
-        std::visit([](auto&& arg) {
-            for (auto const& typed_data_element : arg) {
-                if (typed_data_element.raw.has_value()) {
-                    std::cout << typed_data_element.raw.value() << " ";
-                }
-                else {
-                    std::cout << "NULL";
-                }
-            }
-         }, column.data_list);
+        
+        std::visit([](auto&& column) {
+            using T = std::decay_t<decltype(column)>::Type;
+            Printer<T>::print(column.data_list);
+         }, column);
+        
+
+        std::cout << std::endl;
 
     }
 }

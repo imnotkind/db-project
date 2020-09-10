@@ -46,9 +46,6 @@
     <ClInclude Include="Data.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DataType.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="CustomerTable.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
@@ -56,6 +53,12 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Column.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Printer.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

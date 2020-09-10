@@ -1,0 +1,40 @@
+#pragma once
+#include <optional>
+#include <vector>
+#include <iomanip>
+
+template<typename T>
+class Printer {
+public:
+	static void print(std::vector<Data<T>> data_list) {
+
+		for (auto const& typed_data_element : data_list) {
+			if (typed_data_element.data.has_value()) {
+				std::cout << typed_data_element.data.value() << " | ";
+			}
+			else {
+				std::cout << "NULL" << " | ";
+			}
+		}
+
+	}
+};
+
+
+
+template<>
+class Printer<double> {
+public:
+	static void print(std::vector<Data<double>> data_list) {
+
+		for (auto const& typed_data_element : data_list) {
+			if (typed_data_element.data.has_value()) {
+				std::cout << std::fixed <<  std::setprecision(2) << typed_data_element.data.value() << " | ";
+			}
+			else {
+				std::cout << "NULL" << " | ";
+			}
+		}
+
+	}
+};
