@@ -24,8 +24,8 @@ public:
 	
 	
 	Column(std::string name_, int max_len_) : name { name_ }, max_len{ max_len_ } {}
-	void insert_data(std::string record) {
-		this->data_list.push_back(Data<T>{Reader<T>::read(record)}); // not constructor, list initialization
+	void insert_data(Data<T> data){
+		this->data_list.push_back(data);
 	}
 	std::vector<Data<T>> get_data() const {
 		return data_list;
