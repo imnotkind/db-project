@@ -2,6 +2,7 @@
 #include "ZonecostTable.h"
 #include "LineitemTable.h"
 #include "ProductsTable.h"
+#include "Query.h"
 #include <iostream>
 #include <fstream>
 #include <string>

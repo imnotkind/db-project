@@ -18,6 +18,7 @@ public:
 	}
 };
 
+// specialize the template for the special behavior of reading double
 template<>
 class Printer<double> {
 public:

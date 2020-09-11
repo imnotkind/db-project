@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Query.cpp" />
     <ClCompile Include="Table.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="CustomerTable.h" />
     <ClInclude Include="Printer.h" />
     <ClInclude Include="ProductsTable.h" />
+    <ClInclude Include="Query.h" />
     <ClInclude Include="Reader.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="ZonecostTable.h" />
