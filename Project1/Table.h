@@ -35,10 +35,10 @@ public:
 		(this->data_size)++;
 	}
 
-	int get_row_size() const{
+	int get_row_size() const {
 		return (this->data_size) / (this->column_size);
 	}
-	int get_column_size() const{
+	int get_column_size() const {
 		return (this->column_size);
 	}
 

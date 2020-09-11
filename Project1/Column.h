@@ -22,7 +22,6 @@ class Column {
 public:
 	using Type = T;
 	
-	
 	Column(std::string name_, int max_len_) : name { name_ }, max_len{ max_len_ } {}
 	void insert_data(Data<T> data){
 		this->data_list.push_back(data);

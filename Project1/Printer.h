@@ -6,8 +6,7 @@
 template<typename T>
 class Printer {
 public:
-	static void print(std::vector<Data<T>> data_list) {
-
+	static void print(std::vector<Data<T>>& data_list) {
 		for (auto const& typed_data_element : data_list) {
 			if (typed_data_element.raw.has_value()) {
 				std::cout << typed_data_element.raw.value() << " | ";
@@ -16,16 +15,13 @@ public:
 				std::cout << "NULL" << " | ";
 			}
 		}
-
 	}
 };
-
-
 
 template<>
 class Printer<double> {
 public:
-	static void print(std::vector<Data<double>> data_list) {
+	static void print(std::vector<Data<double>>& data_list) {
 
 		for (auto const& typed_data_element : data_list) {
 			if (typed_data_element.raw.has_value()) {
