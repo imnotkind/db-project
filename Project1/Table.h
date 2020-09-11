@@ -30,10 +30,8 @@ public:
 	}
 	template <typename T>
 	void insert_column_data(std::string column_name, Data<T> data) {
-		std::visit([data](auto&& column) {
-				column.insert_data(data);
-			
-			}, this->table.find(column_name)->second);
+		Column<T>& column = std::get<Column<T>>(this->table.find(column_name)->second);
+		column.insert_data(data);
 		(this->data_size)++;
 	}
 

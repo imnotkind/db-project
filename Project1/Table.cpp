@@ -54,10 +54,7 @@ void Table::load_file(std::ifstream& input_file) {
 
             std::visit([this, schema, record](auto&& column) {
                 using T = std::decay_t<decltype(column)>::Type;
-                // NOT BUILDING
                 this->insert_column_data<T>(schema.name, Data<T>{Reader<T>::read(record)}); 
-                // WORKS
-                //column.insert_data(Data<T>{Reader<T>::read(record)});
                 }, this->table.find(schema.name)->second);
 
 
@@ -135,7 +132,6 @@ void Query::Query2(const Table& lineitem_table, const Table& products_table) {
     int idx1, idx2;
 
     //product that has been purchased by at least two customers
-    std::cout << lineitem_table.get_row_size() << ", " << products_table.get_row_size() << std::endl;
     std::vector<bool> answer1(products_table.get_row_size(), false);
     const Column<int> products_column_barcode = std::get<Column<int>>(products_table.table.find("BARCODE")->second);
     idx1 = 0;
