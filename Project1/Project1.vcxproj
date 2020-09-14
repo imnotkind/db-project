@@ -141,27 +141,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="resource\customer.txt" />
+    <Text Include="resource\lineitem.txt" />
+    <Text Include="resource\products_a.txt" />
+    <Text Include="resource\zonecost.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base\Column.h" />
+    <ClInclude Include="base\Data.h" />
+    <ClInclude Include="base\Table.h" />
+    <ClInclude Include="table\CustomerTable.h" />
+    <ClInclude Include="table\LineitemTable.h" />
+    <ClInclude Include="table\ProductsTable.h" />
+    <ClInclude Include="table\ZonecostTable.h" />
+    <ClInclude Include="util\Printer.h" />
+    <ClInclude Include="util\Query.h" />
+    <ClInclude Include="util\Reader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base\Table.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Query.cpp" />
-    <ClCompile Include="Table.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Column.h" />
-    <ClInclude Include="Data.h" />
-    <ClInclude Include="CustomerTable.h" />
-    <ClInclude Include="Printer.h" />
-    <ClInclude Include="ProductsTable.h" />
-    <ClInclude Include="Query.h" />
-    <ClInclude Include="Reader.h" />
-    <ClInclude Include="Table.h" />
-    <ClInclude Include="ZonecostTable.h" />
-    <ClInclude Include="LineitemTable.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="res\customer.txt" />
-    <Text Include="res\lineitem.txt" />
-    <Text Include="res\products_a.txt" />
-    <Text Include="res\zonecost.txt" />
+    <ClCompile Include="util\Query.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,60 +15,60 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="resource\products_a.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="resource\zonecost.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="resource\customer.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="resource\lineitem.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="table\CustomerTable.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="table\LineitemTable.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="table\ProductsTable.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="table\ZonecostTable.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="util\Query.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="util\Reader.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="util\Printer.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Column.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Data.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="base\Table.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="util\Query.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="base\Table.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Table.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Query.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Data.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CustomerTable.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Table.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Column.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Reader.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Printer.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ZonecostTable.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="LineitemTable.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ProductsTable.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Query.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="res\customer.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-    <Text Include="res\lineitem.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-    <Text Include="res\products_a.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-    <Text Include="res\zonecost.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
   </ItemGroup>
 </Project>

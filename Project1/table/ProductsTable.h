@@ -1,5 +1,5 @@
 #pragma once
-#include "Table.h"
+#include "../base/Table.h"
 
 class ProductsTable : public Table {
 

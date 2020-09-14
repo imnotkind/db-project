@@ -1,6 +1,7 @@
 #include "Query.h"
 #include <set>
 #include <string>
+#include <iostream>
 
 
 void Query::Query1(const Table& customer_table, const Table& zonecost_table) {
@@ -112,7 +113,7 @@ void Query::Query2(const Table& lineitem_table, const Table& products_table) {
             Data<std::string> products_data_proddesc = products_column_proddesc.get_data().at(idx1);
 
             if (products_data_barcode.raw.has_value() && products_data_proddesc.raw.has_value()) {
-                std::cout << products_data_barcode.raw.value() << " | " << products_data_proddesc.raw.value() << std::endl;
+                std::cout << products_data_barcode.raw.value() << "   " << products_data_proddesc.raw.value() << std::endl;
             }
 
         }

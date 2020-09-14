@@ -2,6 +2,7 @@
 #include <optional>
 #include <vector>
 #include <iomanip>
+#include <iostream>
 
 template<typename T>
 class Printer {
