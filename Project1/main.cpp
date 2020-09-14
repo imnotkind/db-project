@@ -47,9 +47,6 @@ int main(int argc, char* argv[])
         Query::Query2(lineitem_table, products_table);
 
     }
-    else {
-        std::cout << "argument error" << std::endl;
-    }
 
 
 }
