@@ -1,8 +1,8 @@
-﻿#include "table/CustomerTable.hpp"
-#include <fstream>
+﻿#include <fstream>
 #include <iostream>
 #include <string>
 
+#include "table/CustomerTable.hpp"
 #include "table/LineitemTable.hpp"
 #include "table/ProductsTable.hpp"
 #include "table/ZonecostTable.hpp"
