@@ -29,34 +29,34 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="table\CustomerTable.h">
+    <ClInclude Include="base\Column.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="table\LineitemTable.h">
+    <ClInclude Include="table\CustomerTable.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="table\ProductsTable.h">
+    <ClInclude Include="base\Data.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="table\ZonecostTable.h">
+    <ClInclude Include="table\LineitemTable.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="util\Query.h">
+    <ClInclude Include="util\Printer.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="util\Reader.h">
+    <ClInclude Include="table\ProductsTable.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="util\Printer.h">
+    <ClInclude Include="util\Query.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="base\Column.h">
+    <ClInclude Include="util\Reader.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="base\Data.h">
+    <ClInclude Include="base\Table.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="base\Table.h">
+    <ClInclude Include="table\ZonecostTable.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-#include "../base/Table.h"
+#include "../base/Table.hpp"
 
 class LineitemTable : public Table {
 

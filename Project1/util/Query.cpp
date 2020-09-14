@@ -1,4 +1,4 @@
-#include "Query.h"
+#include "Query.hpp"
 #include <set>
 #include <string>
 #include <iostream>

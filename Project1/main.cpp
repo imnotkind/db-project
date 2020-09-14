@@ -1,8 +1,8 @@
-﻿#include "table/CustomerTable.h"
-#include "table/ZonecostTable.h"
-#include "table/LineitemTable.h"
-#include "table/ProductsTable.h"
-#include "util/Query.h"
+﻿#include "table/CustomerTable.hpp"
+#include "table/ZonecostTable.hpp"
+#include "table/LineitemTable.hpp"
+#include "table/ProductsTable.hpp"
+#include "util/Query.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>

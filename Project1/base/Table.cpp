@@ -1,6 +1,6 @@
-#include "Table.h"
-#include "../util/Printer.h"
-#include "../util/Reader.h"
+#include "Table.hpp"
+#include "../util/Printer.hpp"
+#include "../util/Reader.hpp"
 #include <iostream>
 #include <variant>
 #include <set>
