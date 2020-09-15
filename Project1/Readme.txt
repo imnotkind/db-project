@@ -1,4 +1,4 @@
-This program needs C++ 17 in MSVC, C++ 2a in g++
+This program requires C++ 17
 
 Tested on 
 - Ubuntu 20.04.1 LTS

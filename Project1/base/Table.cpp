@@ -12,7 +12,7 @@ Table::Table(std::vector<ColumnSchema> table_schema_)
   for (ColumnSchema schema : this->table_schema) {
     std::visit(
         [this, schema](auto&& type_holder) {
-          using T = std::decay_t<decltype(type_holder)>::Type;
+          using T = typename std::decay_t<decltype(type_holder)>::Type;
           this->insert_column<T>(schema);
         },
         schema.type);
@@ -25,7 +25,7 @@ void Table::show() {
 
     std::visit(
         [](auto&& column) {
-          using T = std::decay_t<decltype(column)>::Type;
+          using T = typename std::decay_t<decltype(column)>::Type;
           Printer<T>::print(column.get_data());
         },
         column);
@@ -51,7 +51,7 @@ void Table::load_file(std::ifstream& input_file) {
 
       std::visit(
           [this, schema, record](auto&& column) {
-            using T = std::decay_t<decltype(column)>::Type;
+            using T = typename std::decay_t<decltype(column)>::Type;
             this->insert_column_data<T>(schema.name,
                                         Data<T>{Reader<T>::read(record)});
           },
