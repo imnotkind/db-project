@@ -81,8 +81,8 @@ Four edubfm_Insert(
     BfMHashKey 		*key,			/* IN a hash key in Buffer Manager */
     Two 		index,			/* IN an index used in the buffer pool */
     Four 		type)			/* IN buffer type */
-{
-    Four 		i;			
+{	
+    //Four        i; Why does this exist??
     Two  		hashValue;
 
 
@@ -90,7 +90,11 @@ Four edubfm_Insert(
 
     if( (index < 0) || (index > BI_NBUFS(type)) )
         ERR( eBADBUFINDEX_BFM );
+    
+    hashValue = BFM_HASH(key, type);
 
+    BI_NEXTHASHENTRY(type, index) = BI_HASHTABLEENTRY(type, hashValue);
+    BI_HASHTABLEENTRY(type, hashValue) = index;
    
 
     return( eNOERROR );
