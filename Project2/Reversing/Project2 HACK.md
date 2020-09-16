@@ -51,7 +51,56 @@ typedef struct {
 
 세어 보면 6 + 3*8 에다 alignment니 32바이트라고 보는 게 맞다.
 
+## Define structs
+
 아예 타입을 struct로 define해보자
+
+```c
+00000000 BfmHashKey      struc ; (sizeof=0x8, align=0x8, mappedto_11)
+00000000                                         ; XREF: BufferTable/r
+00000000 pageNo          dd ?
+00000004 volNo           dw ?
+00000006                 db ? ; undefined
+00000007                 db ? ; undefined
+00000008 BfmHashKey      ends
+00000008
+00000000 ; ---------------------------------------------------------------------------
+00000000
+00000000 BufferTable     struc ; (sizeof=0x10, align=0x8, mappedto_12)
+00000000 key             BfmHashKey ?
+00000008 fixed           dw ?
+0000000A bits            db ?
+0000000B                 db ? ; undefined
+0000000C nextHashEntry   dw ?
+0000000E                 db ? ; undefined
+0000000F                 db ? ; undefined
+00000010 BufferTable     ends
+00000010
+00000000 ; ---------------------------------------------------------------------------
+00000000
+00000000 BufferInfo      struc ; (sizeof=0x20, align=0x8, mappedto_13)
+00000000 bufSize         dw ?
+00000002 nextVictim      dw ?
+00000004 nBufs           dw ?
+00000006                 db ? ; undefined
+00000007                 db ? ; undefined
+00000008 bufTable        dq ?                    ; offset
+00000010 bufferPool      dq ?                    ; offset
+00000018 hashTable       dq ?                    ; offset
+00000020 BufferInfo      ends
+00000020
+```
+
+완성했다. 이제 코드는 아주 아름다워졌다.
+
+```c
+HashTableEntry_ptr = &bufInfo[type_0_or_1].hashTable[(__int16)((key->pageNo + volNo) % (3 * nBufs - 1))];
+    bufInfo[type].bufTable[index].nextHashEntry = *HashTableEntry_ptr;// BI_NEXTHASHENTRY(type, index) = BI_HASHTABLEENTRY(type, hashValue)
+    *HashTableEntry_ptr = index;
+    result = 0;
+```
+
+
 
 
 
@@ -60,16 +109,17 @@ typedef struct {
 https://www.cnblogs.com/goodhacker/p/7692443.html
 
 ```
+#define _WORD  uint16
+typedef int16 WORD;
+
 WORD2(x) : *(((_WORD*)&x)+2)
+#define SWORDn(x, n)   (*((int16*)&(x)+n))
 ```
 
 
 
-### structs
-
-Views->SubViews->Structure
-
-let's define all structures
 
 
+# Just Memo
 
+*.vol 파일(디스크)를 실행파일이 바꾸므로 유의할 것
