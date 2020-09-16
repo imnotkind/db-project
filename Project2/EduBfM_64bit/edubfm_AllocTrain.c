@@ -79,8 +79,55 @@ Four edubfm_AllocTrain(
 	/* Error check whether using not supported functionality by EduBfM */
 	if(sm_cfgParams.useBulkFlush) ERR(eNOTSUPPORTED_EDUBFM);
 
+    /* choose target buffer element by second chance buffer replacement algorithm */
+    victim = BI_NEXTVICTIM(type);
 
+    if(BI_NBUFS(type) <= 0){
+        ERR(eNOUNFIXEDBUF_BFM);
+    }
+
+    i = 0;
+    while(1){
+        if (BI_FIXED(type, victim) == 0) {
+            if(BI_BITS(type, victim) & REFER){ //if REFER bit is 1
+                BI_BITS(type, victim) ^= REFER; //set REFER bit to 0
+            }
+            else{ //if REFER bit is 0
+                break;
+            }
+        }
+
+        i++;
+        victim = (victim + 1) % BI_NBUFS(type); 
+        //nbufs : total count of buffer element
+        //if reached to end, go to the start by %
+
+        if(i >= 2*BI_NBUFS(type)){ 
+            //if we iterated all buffer elements twice, then we just have no fixed==0 element
+            ERR(eNOUNFIXEDBUF_BFM);
+        }
+    }
     
+
+    /* initialize chosen target buffer element */
+    
+    
+    if(!IS_NILBFMHASHKEY(BI_KEY(type, victim))){ //the buffer element is in the hashtable (linked list)
+        if(BI_BITS(type, victim) & DIRTY){
+            e = edubfm_FlushTrain(&BI_KEY(type, victim), type);
+            if(e < 0)
+                ERR(e);
+        }
+        
+        e = edubfm_Delete(&BI_KEY(type, victim), type);
+        if(e < 0)
+            ERR(e);
+    }
+
+    BI_BITS(type, victim) = 0;
+    BI_NEXTVICTIM(type) = (victim + 1) % BI_NBUFS(type);
+
+
     return( victim );
     
 }  /* edubfm_AllocTrain */

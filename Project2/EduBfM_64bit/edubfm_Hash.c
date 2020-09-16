@@ -82,7 +82,6 @@ Four edubfm_Insert(
     Two 		index,			/* IN an index used in the buffer pool */
     Four 		type)			/* IN buffer type */
 {	
-    //Four        i; Why does this exist??
     Two  		hashValue;
 
 
@@ -93,7 +92,9 @@ Four edubfm_Insert(
     
     hashValue = BFM_HASH(key, type);
 
+    //always insert in head of linked list
     BI_NEXTHASHENTRY(type, index) = BI_HASHTABLEENTRY(type, hashValue);
+    //HashTableEntry would be -1 if no collision, which is perfectly fine
     BI_HASHTABLEENTRY(type, hashValue) = index;
    
 
@@ -130,9 +131,28 @@ Four edubfm_Delete(
 
     CHECKKEY(key);    /*@ check validity of key */
 
+    hashValue = BFM_HASH(key, type);
+    prev = NIL;
+    i = BI_HASHTABLEENTRY(type, hashValue);
+    
+    while(1) {
+        
+        if(i == NIL)
+            ERR( eNOTFOUND_BFM );
 
+        if(EQUALKEY(&BI_KEY(type, i), key))
+            break;
+        
+        prev = i;
+        i = BI_NEXTHASHENTRY(type, i);
+    }
 
-    ERR( eNOTFOUND_BFM );
+    if(prev == NIL) //first entry match
+        BI_HASHTABLEENTRY(type, hashValue) = BI_NEXTHASHENTRY(type, i);
+    else 
+        BI_NEXTHASHENTRY(type, prev) = BI_NEXTHASHENTRY(type, i);
+
+    return( eNOERROR );
 
 }  /* edubfm_Delete */
 
@@ -159,15 +179,26 @@ Four edubfm_LookUp(
     BfMHashKey          *key,                   /* IN a hash key in Buffer Manager */
     Four                type)                   /* IN buffer type */
 {
-    Two                 i, j;                   /* indices */
+    Two                 i;                   /* indices */
     Two                 hashValue;
 
 
     CHECKKEY(key);    /*@ check validity of key */
 
+    hashValue = BFM_HASH(key, type);
+    i = BI_HASHTABLEENTRY(type, hashValue);
 
+    while(1){
+        if(i == NIL)
+            return(NOTFOUND_IN_HTABLE);
 
-    return(NOTFOUND_IN_HTABLE);
+        if(EQUALKEY(&BI_KEY(type, i), key))
+            break;
+        
+        i = BI_NEXTHASHENTRY(type, i);
+    }
+
+    return i;
     
 }  /* edubfm_LookUp */
 
@@ -190,10 +221,16 @@ Four edubfm_LookUp(
  */
 Four edubfm_DeleteAll(void)
 {
-    Two 	i;
-    Four        tableSize;
-    
+    Two     i, j;
+    Two     tableSize;
 
+    for(i = 0; i < NUM_BUF_TYPES; i++){
+        tableSize = HASHTABLESIZE(i);
+        for(j = 0; j < tableSize; j++){
+            BI_HASHTABLEENTRY(i, j) = NIL;
+        }
+    }
+    
 
     return(eNOERROR);
 
