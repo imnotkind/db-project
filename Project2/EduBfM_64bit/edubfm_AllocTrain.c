@@ -112,7 +112,7 @@ Four edubfm_AllocTrain(
     /* initialize chosen target buffer element */
     
     
-    if(!IS_NILBFMHASHKEY(BI_KEY(type, victim))){ //the buffer element is in the hashtable (linked list)
+    if(BI_KEY(type, victim).pageNo != NIL){ //the buffer element is in the hashtable (linked list)
         if(BI_BITS(type, victim) & DIRTY){
             e = edubfm_FlushTrain(&BI_KEY(type, victim), type);
             if(e < 0)

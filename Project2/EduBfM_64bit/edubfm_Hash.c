@@ -221,13 +221,11 @@ Four edubfm_LookUp(
  */
 Four edubfm_DeleteAll(void)
 {
-    Two     i, j;
-    Two     tableSize;
+    Two     type, i;
 
-    for(i = 0; i < NUM_BUF_TYPES; i++){
-        tableSize = HASHTABLESIZE(i);
-        for(j = 0; j < tableSize; j++){
-            BI_HASHTABLEENTRY(i, j) = NIL;
+    for(type = 0; type < NUM_BUF_TYPES; type++){
+        for(i = 0; i < HASHTABLESIZE(i); i++){
+            BI_HASHTABLEENTRY(type, i) = NIL;
         }
     }
     
