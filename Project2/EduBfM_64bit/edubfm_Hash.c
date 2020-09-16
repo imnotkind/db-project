@@ -224,7 +224,7 @@ Four edubfm_DeleteAll(void)
     Two     type, i;
 
     for(type = 0; type < NUM_BUF_TYPES; type++){
-        for(i = 0; i < HASHTABLESIZE(i); i++){
+        for(i = 0; i < HASHTABLESIZE(type); i++){
             BI_HASHTABLEENTRY(type, i) = NIL;
         }
     }

@@ -65,11 +65,11 @@ Four EduBfM_DiscardAll(void)
             BI_KEY(type, i).pageNo = NIL;
             BI_BITS(type, i) = 0;
         }
-
-        //hashTable
-        e = edubfm_DeleteAll();
-        if(e < 0) ERR(e);
     }
+
+    //hashTable
+    e = edubfm_DeleteAll();
+    if(e < 0) ERR(e);
 
     return(eNOERROR);
 
