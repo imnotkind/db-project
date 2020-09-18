@@ -104,8 +104,114 @@ Four EduOM_DestroyObject(
 
     if (oid == NULL) ERR(eBADOBJECTID_OM);
 
+    //check catPage
+    e = BfM_GetTrain((TrainID*)catObjForFile, (char**)&catPage, PAGE_BUF);
+    if( e < 0 ) ERR( e );
+
+    GET_PTR_TO_CATENTRY_FOR_DATA(catObjForFile, catPage, catEntry);
+    pFid.pageNo = catEntry->firstPage;
+    pFid.volNo = catEntry->fid.volNo;
+
+    e = BfM_FreeTrain((TrainID*)catObjForFile, PAGE_BUF);
+    if( e < 0 ) ERR( e );
+
+
+    //page which contains object
+    pid.pageNo = oid->pageNo;
+    pid.volNo = oid->volNo; 
+
+    e = BfM_GetTrain(&pid, &apage, PAGE_BUF);
+    if( e < 0 ) ERR( e );
 
     
-    return(eNOERROR);
+    /* do not do error handling .. yet
+    if(EQUAL_FILEID(apage->header.fid, catEntry->fid)){
+        ERR(eBADOBJECTID_OM);
+    }
+    */
+
+    e = om_RemoveFromAvailSpaceList(catObjForFile, &pid, apage);
+    if (e < 0) ERRB1(e, &pid, PAGE_BUF);
+
+    offset = apage->slot[-oid->slotNo].offset;
+    obj = &apage->data[offset];
+    alignedLen = ALIGNED_LENGTH(obj->header.length);
+
+    apage->slot[-oid->slotNo].offset = EMPTYSLOT;
+
+    //need to do it iteratively if there are emptyslots in a row????
+    if(oid->slotNo == apage->header.nSlots - 1){
+        apage->header.nSlots -= 1;
+    }
+
+    //object's space was adjacent to contiguous free area or not
+    if(offset + sizeof(ObjectHdr) + alignedLen == apage->header.free){ 
+        apage->header.free -= sizeof(ObjectHdr) + alignedLen;
+    }
+    else{
+        apage->header.unused += sizeof(ObjectHdr) + alignedLen;
+    }
+
+
+    //if no more object in this page AND page is not the first page of the file
+    if(apage->header.nSlots == 0 && !EQUAL_PAGEID(pid, pFid)){ //&& apage->slot[0].offset == -1){
+
+        /*Delete the page from the list of pages of the file*/
+        e = om_FileMapDeletePage(catObjForFile, &pid);
+        if (e < 0) ERRB1(e, &pid, PAGE_BUF);
+
+        e = BfM_FreeTrain(&pid, PAGE_BUF);
+        if( e < 0 ) ERR( e );
+
+        /* Insert the deallocated page into the dealloclist */
+        e = Util_getElementFromPool(dlPool, &dlElem);
+        if( e < 0 ) ERR( e );
+        dlElem->type = DL_PAGE;
+        dlElem->elem.pid= pid; /* ID of the deallocated page */
+        dlElem->next = dlHead->next;
+        dlHead->next = dlElem;
+
+        return(eNOERROR);
+    }
+    else{
+
+        e = om_PutInAvailSpaceList(catObjForFile, &pid, apage);
+        if (e < 0) ERRB1(e, &pid, PAGE_BUF);
+
+        e = BfM_SetDirty(&pid, PAGE_BUF);
+        if (e < 0) ERRB1(e, &pid, PAGE_BUF);
+
+        e = BfM_FreeTrain(&pid, PAGE_BUF);
+        if( e < 0 ) ERR( e );
+
+        return(eNOERROR);
+        
+    }
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+
+
+   
+
+    
+    
     
 } /* EduOM_DestroyObject() */

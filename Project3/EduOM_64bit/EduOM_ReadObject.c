@@ -108,8 +108,31 @@ Four EduOM_ReadObject(
     
     if (buf == NULL) ERR(eBADUSERBUF_OM);
 
-    
+    pid.volNo = oid->volNo;
+    pid.pageNo = oid->pageNo;
 
-    return(length);
+    e = BfM_GetTrain(&pid, &apage, PAGE_BUF);        
+    if( e < 0 ) ERR( e );
+
+    offset = apage->slot[-oid->slotNo].offset;
+    obj = &apage->data[offset];
+    if(length == REMAINDER){
+        memcpy(buf, obj->data + start, obj->header.length);
+
+        e = BfM_FreeTrain(&pid, PAGE_BUF); //sequence is important, we should not use apage after FreeTrain()
+        if( e < 0 ) ERR( e );
+
+        return obj->header.length;
+    }
+    else{
+        memcpy(buf, obj->data + start, length);
+
+        e = BfM_FreeTrain(&pid, PAGE_BUF); //sequence is important, we should not use apage after FreeTrain()
+        if( e < 0 ) ERR( e );
+
+        return length;
+
+    }
+    
     
 } /* EduOM_ReadObject() */
