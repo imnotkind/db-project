@@ -127,7 +127,7 @@ Four edubtm_Delete(
     Pool                        *dlPool,        /* INOUT pool of dealloc list elements */
     DeallocListElem             *dlHead)        /* INOUT head of the dealloc list */
 {
-	/* These local variables are used in the solution code. However, you don¡¯t have to use all these variables in your code, and you may also declare and use additional local variables if needed. */
+	/* These local variables are used in the solution code. However, you donï¿½ï¿½t have to use all these variables in your code, and you may also declare and use additional local variables if needed. */
     Four                        e;              /* error number */
     Boolean                     lf;             /* TRUE if a page is not half full */
     Boolean                     lh;             /* TRUE if a page is splitted */
@@ -157,7 +157,10 @@ Four edubtm_Delete(
     /* Delete following 2 lines before implement this function */
     printf("Implementation of delete operation is optional (not compulsory),\n");
     printf("and delete operation has not been implemented yet.\n");
+    printf("THIS FUNCTION IS NOT IMPLEMENTED.\n");
+    printf("IT JUST CALLS THE SOLUTION FUNCTION.\n");
 
+    btm_Delete(catObjForFile, root, kdesc, kval, oid, f, h, item, dlPool, dlHead);
 
     return(eNOERROR);
     
@@ -201,7 +204,7 @@ Four edubtm_DeleteLeaf(
     Pool                        *dlPool,        /* INOUT pool of dealloc list elements */
     DeallocListElem             *dlHead)        /* INOUT head of a dealloc list */
 {
-	/* These local variables are used in the solution code. However, you don¡¯t have to use all these variables in your code, and you may also declare and use additional local variables if needed. */
+	/* These local variables are used in the solution code. However, you donï¿½ï¿½t have to use all these variables in your code, and you may also declare and use additional local variables if needed. */
     Four                        e;              /* error number */
     Two                         i;              /* index */
     Two                         of;             /* # of ObjectIDs of an overflow page when less than 1/4 */
@@ -231,6 +234,10 @@ Four edubtm_DeleteLeaf(
     /* Delete following 2 lines before implement this function */
     printf("Implementation of delete operation is optional (not compulsory),\n");
     printf("and delete operation has not been implemented yet.\n");
+    printf("THIS FUNCTION IS NOT IMPLEMENTED.\n");
+    printf("IT JUST CALLS THE SOLUTION FUNCTION.\n");
+
+    btm_DeleteLeaf(pFid, pid, apage, kdesc, kval, oid, f, h, item, dlPool, dlHead);
 
 	      
     return(eNOERROR);

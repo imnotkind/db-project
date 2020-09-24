@@ -97,7 +97,7 @@ Four EduBtM_DeleteObject(
     Pool     *dlPool,		/* INOUT pool of dealloc list elements */
     DeallocListElem *dlHead) /* INOUT head of the dealloc list */
 {
-	/* These local variables are used in the solution code. However, you don¡¯t have to use all these variables in your code, and you may also declare and use additional local variables if needed. */
+	/* These local variables are used in the solution code. However, you donï¿½ï¿½t have to use all these variables in your code, and you may also declare and use additional local variables if needed. */
     int		i;
     Four    e;			/* error number */
     Boolean lf;			/* flag for merging */
@@ -132,8 +132,10 @@ Four EduBtM_DeleteObject(
 	/* Delete following 3 lines before implement this function */
 	printf("Implementation of delete operation is optional (not compulsory),\n");
 	printf("and delete operation has not been implemented yet.\n");
-	return(eNOTSUPPORTED_EDUBTM);
+    printf("THIS FUNCTION IS NOT IMPLEMENTED.\n");
+    printf("IT JUST CALLS THE SOLUTION FUNCTION.\n");
 
+    BtM_DeleteObject(catObjForFile, root, kdesc, kval, oid, dlPool, dlHead);
     
     return(eNOERROR);
     

@@ -145,7 +145,7 @@ Four edubtm_FetchNext(
     BtreeCursor 	*current,	/* IN current cursor */
     BtreeCursor 	*next)		/* OUT next cursor */
 {
-    Four 		e;		/* error number */
+	Four 		e;		/* error number */
     Four 		cmp;		/* comparison result */
     Two 		alignedKlen;	/* aligned length of a key length */
     PageID 		leaf;		/* temporary PageID of a leaf page */
@@ -225,7 +225,7 @@ Four edubtm_FetchNext(
     }
 
     // need leaf, next->slotNo, apage
-    entry = apage->data + apage->slot[next->slotNo];
+    entry = apage->data + apage->slot[-next->slotNo];
     alignedKlen = ALIGNED_LENGTH(entry->klen);
     oidArray = &entry->kval[alignedKlen];
 

@@ -129,7 +129,7 @@ void edubtm_CompactLeafPage(
     BtreeLeaf 		*apage,			/* INOUT leaf page to compact */
     Two       		slotNo)			/* IN slot to go to the boundary of free space */
 {	
-    BtreeLeaf 		tpage;			/* temporay page used to save the given page */
+	BtreeLeaf 		tpage;			/* temporay page used to save the given page */
     Two                 apageDataOffset;        /* where the next object is to be moved */
     Two                 len;                    /* length of the leaf entry */
     Two                 i;                      /* index variable */

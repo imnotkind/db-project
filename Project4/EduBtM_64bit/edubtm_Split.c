@@ -106,10 +106,13 @@ Four edubtm_SplitInternal(
 
     itemEntryLen = 4 + ALIGNED_LENGTH(2 + item->klen); //spid + ALIGN(klen + kval); 
 
-
+    maxLoop = fpage->hdr.nSlots + 1;
+    sum = 0;
+    i = 0; /* slot No. in the splitted pages */
+    j = 0; /* slot No. in the given page, fpage */
     itemToGo = FALSE;
     //old page iteration
-    for(i=0; i < maxLoop; i++){
+    for(i=0; i < maxLoop && sum < BI_HALF; i++){
 
         if(i == high + 1){ // our Leafitem should be inserted in this slot, don't put it now and just mark itemToGo
             itemToGo = TRUE; // our item should to go original page
@@ -126,9 +129,6 @@ Four edubtm_SplitInternal(
 
         sum += entryLen + 2; //slot
 
-
-        if(sum >= BL_HALF)  //half of BtreeLeaf.data
-            break;
     }
     fpage->hdr.nSlots = j; // is same to i if our page belongs to the new page, i-1 if it does not
     if(fpage->hdr.type & ROOT){
@@ -136,17 +136,28 @@ Four edubtm_SplitInternal(
     }
 
     //new page iteration
-    k = 0;  /* slot No. in the new page */
+    k = -1;  /* slot No. in the new page */
     nEntryOffset = 0;
     for(; i < maxLoop; i++){
-        nEntryOffset += npage->hdr.free;
-        npage->slot[k] = nEntryOffset; 
-        nEntry = &npage->data[nEntryOffset];
+
+        if( k != -1){
+            nEntryOffset = npage->hdr.free;
+            npage->slot[-k] = nEntryOffset; 
+            nEntry = &npage->data[nEntryOffset];
+        }
+
 
         if(i == high + 1){
-            itemEntry = nEntry;
+            
 
-            memcpy(itemEntry, item, itemEntryLen);
+            if(k != -1){
+                itemEntry = nEntry;
+                memcpy(itemEntry, item, itemEntryLen);
+            }
+            else{
+                memcpy(ritem, item, itemEntryLen);
+            }
+            
 
             entryLen = itemEntryLen;
         }
@@ -155,7 +166,13 @@ Four edubtm_SplitInternal(
             fEntry = &fpage->data[fEntryOffset];
             entryLen = (4 + ALIGNED_LENGTH(2 + fEntry->klen)); 
 
-            memcpy(nEntry, fEntry, entryLen);
+            if(k != -1){
+                memcpy(nEntry, fEntry, entryLen);
+            }
+            else{
+                memcpy(ritem, fEntry, entryLen);
+            }
+
 
             if(fEntryOffset + entryLen == fpage->hdr.free) // if removed page was adjacent to free space
                 fpage->hdr.free -= entryLen;
@@ -165,14 +182,22 @@ Four edubtm_SplitInternal(
             j++;
         }
 
-        npage->hdr.free += entryLen;
+        if(k == -1){
+            npage->hdr.p0 = ritem->spid;
+            ritem->spid = newPid.pageNo;
+        }
+        else{
+            npage->hdr.free += entryLen;
+        }
 
-
+    
         k++;
     }
     npage->hdr.nSlots = k;
     
 
+
+    
     //put our item in old page if we have to
     if(itemToGo == TRUE){
         if(itemEntryLen > BL_CFREE(fpage)){
@@ -195,13 +220,9 @@ Four edubtm_SplitInternal(
         fpage->hdr.free += itemEntryLen;
         fpage->hdr.nSlots += 1;
     }
-
-    //return value
-    nEntry = &npage->data[npage->slot[0]]; //discriminator key : first slot of new page
-    npage->hdr.p0 = nEntry->spid;
-    ritem->spid = nEntry->spid;
-    ritem->klen = nEntry->klen;
-    memcpy(ritem->kval, nEntry->kval, nEntry->klen);
+    
+    
+    
 
     e = BfM_SetDirty(&newPid, PAGE_BUF);
     if(e<0) ERR(e);
@@ -248,7 +269,7 @@ Four edubtm_SplitLeaf(
     LeafItem                    *item,          /* IN the item which will be inserted */
     InternalItem                *ritem)         /* OUT the item which will be returned by spliting */
 {
-    Four                        e;              /* error number */
+    	Four                        e;              /* error number */
     Two                         i;              /* slot No. in the splitted pages */
     Two                         j;              /* slot No. in the given page, fpage */
     Two                         k;              /* slot No. in the new page */
@@ -285,14 +306,9 @@ Four edubtm_SplitLeaf(
     e = edubtm_InitLeaf(&newPid, FALSE, FALSE);
     if(e<0) ERR(e);
 
-    e = BfM_GetNewTrain(&newPid, &npage, PAGE_BUF);
+    e = BfM_GetTrain(&newPid, &npage, PAGE_BUF);
     if(e<0) ERR(e);
 
-    /*
-    if(fpage->hdr.nSlots == -1){
-     
-    }
-    */
 
     alignedKlen = ALIGNED_LENGTH(item->klen);
     itemEntryLen = (2 + 2 + alignedKlen + sizeof(ObjectID)); 
@@ -305,7 +321,7 @@ Four edubtm_SplitLeaf(
     itemToGo = FALSE; //our item should to go new page
 
     //old page iteration
-    for(i=0; i < maxLoop; i++){
+    for(i=0; i < maxLoop && sum < BL_HALF; i++){
 
         if(i == high + 1){ // our Leafitem should be inserted in this slot, don't put it now and just mark itemToGo
             itemToGo = TRUE; // our item should to go original page
@@ -322,9 +338,6 @@ Four edubtm_SplitLeaf(
 
         sum += entryLen + 2; //slot
 
-
-        if(sum >= BL_HALF)  //half of BtreeLeaf.data
-            break;
     }
     fpage->hdr.nSlots = j; // is same to i if our page belongs to the new page, i-1 if it does not
     if(fpage->hdr.type & ROOT){
@@ -334,12 +347,15 @@ Four edubtm_SplitLeaf(
     //new page iteration
     k = 0;  /* slot No. in the new page */
     nEntryOffset = 0;
+    
     for(; i < maxLoop; i++){
-        nEntryOffset += npage->hdr.free;
-        npage->slot[k] = nEntryOffset; 
+        nEntryOffset = npage->hdr.free;
+        npage->slot[-k] = nEntryOffset; 
         nEntry = &npage->data[nEntryOffset];
 
+
         if(i == high + 1){
+            
             itemEntry = nEntry;
 
             itemEntry->nObjects = item->nObjects;
@@ -349,20 +365,27 @@ Four edubtm_SplitLeaf(
             *iOidArray = item->oid;
 
             entryLen = itemEntryLen;
+            
         }
         else{
             fEntryOffset = fpage->slot[-j];
             fEntry = &fpage->data[fEntryOffset];
             entryLen = (2 + 2 + ALIGNED_LENGTH(fEntry->klen) + sizeof(ObjectID)); 
+            
 
             memcpy(nEntry, fEntry, entryLen);
 
-            if(fEntryOffset + entryLen == fpage->hdr.free) // if removed page was adjacent to free space
+            if(fEntryOffset + entryLen == fpage->hdr.free){ // if removed page was adjacent to free space
                 fpage->hdr.free -= entryLen;
-            else
+            }
+            else{
                 fpage->hdr.unused += entryLen;
+                
+            }
+                
 
             j++;
+            
         }
 
         npage->hdr.free += entryLen;
@@ -371,7 +394,10 @@ Four edubtm_SplitLeaf(
         k++;
     }
     npage->hdr.nSlots = k;
+    
 
+
+    
     //put our item in old page if we have to
     if(itemToGo == TRUE){
         if(itemEntryLen > BL_CFREE(fpage)){
@@ -398,6 +424,7 @@ Four edubtm_SplitLeaf(
         fpage->hdr.free += itemEntryLen;
         fpage->hdr.nSlots += 1;
     }
+    
 
 
     //linked list link
@@ -407,7 +434,10 @@ Four edubtm_SplitLeaf(
     fpage->hdr.nextPage = newPid.pageNo;
 
     if(npage->hdr.nextPage != NIL){
-        e = BfM_GetTrain(&nextPid, mpage, PAGE_BUF);
+        nextPid.pageNo = npage->hdr.nextPage;
+        nextPid.volNo = npage->hdr.pid.volNo;
+
+        e = BfM_GetTrain(&nextPid, &mpage, PAGE_BUF);
         if(e<0) ERR(e);
     
         mpage->hdr.prevPage = newPid.pageNo;

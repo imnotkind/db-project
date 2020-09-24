@@ -382,7 +382,7 @@ Four edubtm_TestInt_2_2(
 
     printf("Test 2_2 tests EduBtM_InsertObject() inserting about the 27,000 objects, which make the depth of the tree to be three.\n");
 
-    for (i = 184; i < 27200; i++){
+    for (i = 184; i < 27200; i++){	
         memcpy(&obj, &i, sizeof(Four_Invariable));
 		e = OM_CreateObject(catalogEntry, NULL, NULL, strlen(obj), obj, &oid);
 		if (e < eNOERROR) ERR(e);
@@ -558,6 +558,8 @@ Four edubtm_TestInt_3_2(
 
 	fgets(str, 100, fp);
 	edubtm_CheckObject(&cursor.oid, fp, pass);
+
+	
 
 	for (i = 1; i < 5; i++)
 	{

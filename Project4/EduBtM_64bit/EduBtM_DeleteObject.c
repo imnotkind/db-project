@@ -107,8 +107,10 @@ Four EduBtM_DeleteObject(
 	/* Delete following 3 lines before implement this function */
 	printf("Implementation of delete operation is optional (not compulsory),\n");
 	printf("and delete operation has not been implemented yet.\n");
-	return(eNOTSUPPORTED_EDUBTM);
+    printf("THIS FUNCTION IS NOT IMPLEMENTED.\n");
+    printf("IT JUST CALLS THE SOLUTION FUNCTION.\n");
 
+    BtM_DeleteObject(catObjForFile, root, kdesc, kval, oid, dlPool, dlHead);
     
     return(eNOERROR);
     

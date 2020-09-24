@@ -71,7 +71,7 @@ Four edubtm_root_insert(
     PageID       *root,		 /* IN root Page IDentifier */
     InternalItem *item)		 /* IN Internal item which will be the unique entry of the new root */
 {
-    Four      e;		/* error number */
+	Four      e;		/* error number */
     PageID    newPid;		/* newly allocated page */
     PageID    nextPid;		/* PageID of the next page of root if root is leaf */
     BtreePage *rootPage;	/* pointer to a buffer holding the root page */
@@ -101,7 +101,7 @@ Four edubtm_root_insert(
     //new root only entry is (item->pid) page (the right side page of split)
     rootPage->bi.slot[0] = 0;
     entry = &rootPage->bi.data[rootPage->bi.slot[0]];
-    entryLen = (4 + ALIGNED_LENGTH(2 + entry->klen)); //internal entry
+    entryLen = (4 + ALIGNED_LENGTH(2 + item->klen)); //internal entry
     memcpy(entry, item, entryLen);
     rootPage->bi.hdr.nSlots = 1;
     rootPage->bi.hdr.free = entryLen;

@@ -94,8 +94,7 @@ Four edubtm_FirstObject(
     Four     		stopCompOp,	/* IN comparison operator of stop condition */
     BtreeCursor 	*cursor)	/* OUT The first ObjectID in the Btree */
 {
-	/* These local variables are used in the solution code. However, you don¡¯t have to use all these variables in your code, and you may also declare and use additional local variables if needed. */
-    int			i;
+	int			i;
     Four 		e;		/* error */
     Four 		cmp;		/* result of comparison */
     PageID 		curPid;		/* PageID of the current page */
@@ -104,6 +103,7 @@ Four edubtm_FirstObject(
     Two                 lEntryOffset;   /* starting offset of a leaf entry */
     btm_LeafEntry 	*lEntry;	/* a leaf entry */
     Two                 alignedKlen;    /* aligned length of the key length */
+    ObjectID 		*oidArray;	/* array of ObjectIDs */
     
 
     if (root == NULL) ERR(eBADPAGE_BTM);
@@ -114,7 +114,66 @@ Four edubtm_FirstObject(
         if(kdesc->kpart[i].type!=SM_INT && kdesc->kpart[i].type!=SM_VARSTRING)
             ERR(eNOTSUPPORTED_EDUBTM);
     }
-    
+
+    e = BfM_GetTrain(root, &apage, PAGE_BUF);
+    if(e<0) ERR(e);
+
+    curPid = *root;
+
+    while(apage->any.hdr.type & INTERNAL){
+        child.volNo = curPid.volNo;
+        child.pageNo = apage->bi.hdr.p0;
+        e = BfM_FreeTrain(&curPid, PAGE_BUF);
+        if(e<0) ERR(e);
+
+        curPid = child;
+
+        e = BfM_GetTrain(&curPid, &apage,  PAGE_BUF);
+        if(e<0) ERR(e);
+    }
+
+    if(apage->bl.hdr.nSlots > 0){
+        lEntry = apage->bl.data + apage->bl.slot[0];
+        alignedKlen = ALIGNED_LENGTH(lEntry->klen);
+        oidArray = &lEntry->kval[alignedKlen];
+
+
+        cursor->key.len = lEntry->klen;
+        memcpy(cursor->key.val, lEntry->kval, lEntry->klen);
+        cursor->slotNo = 0;
+        cursor->leaf = curPid;
+        cursor->oid = *oidArray;
+
+        if(stopCompOp != SM_EOF){
+            cmp = edubtm_KeyCompare(kdesc, &cursor->key, stopKval);
+            if(cmp == EQUAL){
+                cursor->flag = CURSOR_ON;
+
+                if(stopCompOp == SM_LT){
+                    cursor->flag = CURSOR_EOS;
+                }
+
+            }
+            else if(cmp == GREATER){
+                cursor->flag = CURSOR_EOS;
+            }
+            else if(cmp == LESS){
+                cursor->flag = CURSOR_ON;
+            }
+        }
+        else{
+            cursor->flag = CURSOR_ON;
+        }
+        
+
+
+    }
+    else{
+        cursor->flag = CURSOR_EOS;
+    }
+
+    e = BfM_FreeTrain(&curPid, PAGE_BUF);
+    if(e<0) ERR(e);
 
     return(eNOERROR);
     

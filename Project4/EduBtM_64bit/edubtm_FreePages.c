@@ -68,7 +68,7 @@ Four edubtm_FreePages(
     Pool                *dlPool,        /* INOUT pool of dealloc list elements */
     DeallocListElem     *dlHead)        /* INOUT head of the dealloc list */
 {
-    Four                e;              /* error number */
+	Four                e;              /* error number */
     Two                 i;              /* index */
     Two                 alignedKlen;    /* aligned length of the key length */
     PageID              tPid;           /* a temporary PageID */
@@ -80,6 +80,7 @@ Four edubtm_FreePages(
     btm_InternalEntry   *iEntry;        /* an internal entry */
     btm_LeafEntry       *lEntry;        /* a leaf entry */
     DeallocListElem     *dlElem;        /* an element of dealloc list */
+    ObjectID            *oid;
 
     e = BfM_GetTrain(curPid, &apage, PAGE_BUF);
     if(e<0) ERR(e);
@@ -95,6 +96,7 @@ Four edubtm_FreePages(
             iEntryOffset = apage->bi.slot[-i];
             iEntry = &apage->bi.data[iEntryOffset];
 
+
             tPid.volNo = curPid->volNo;
             tPid.pageNo = iEntry->spid;
 
@@ -104,9 +106,6 @@ Four edubtm_FreePages(
         }
 
 
-    }
-    else if(!(apage->any.hdr.type & LEAF)){
-        ERR(eBADBTREEPAGE_BTM);
     }
 
     apage->any.hdr.type = FREEPAGE;

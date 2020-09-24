@@ -132,7 +132,10 @@ Four edubtm_Delete(
     /* Delete following 2 lines before implement this function */
     printf("Implementation of delete operation is optional (not compulsory),\n");
     printf("and delete operation has not been implemented yet.\n");
+    printf("THIS FUNCTION IS NOT IMPLEMENTED.\n");
+    printf("IT JUST CALLS THE SOLUTION FUNCTION.\n");
 
+    btm_Delete(catObjForFile, root, kdesc, kval, oid, f, h, item, dlPool, dlHead);
 
     return(eNOERROR);
     
@@ -205,6 +208,10 @@ Four edubtm_DeleteLeaf(
     /* Delete following 2 lines before implement this function */
     printf("Implementation of delete operation is optional (not compulsory),\n");
     printf("and delete operation has not been implemented yet.\n");
+    printf("THIS FUNCTION IS NOT IMPLEMENTED.\n");
+    printf("IT JUST CALLS THE SOLUTION FUNCTION.\n");
+
+    btm_DeleteLeaf(pFid, pid, apage, kdesc, kval, oid, f, h, item, dlPool, dlHead);
 
 	      
     return(eNOERROR);

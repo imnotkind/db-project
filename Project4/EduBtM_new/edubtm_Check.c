@@ -105,6 +105,17 @@ Four edubtm_CheckFPages(
         childPid.volNo = pid->volNo;
         childPid.pageNo = apage->bi.hdr.p0;
         edubtm_CheckFPages(&childPid, type, fp, pass);
+
+		
+		/*
+		for (i=0; i< apage->bi.hdr.nSlots; i++){
+			entry = apage->bi.data + apage->bi.slot[-i];
+			childPid.volNo = pid->volNo;
+			childPid.pageNo = entry->spid;
+			edubtm_CheckFPages(&childPid, type, fp, pass);
+		}
+		*/
+		
 		
         if (e < eNOERROR) ERR(e);
 

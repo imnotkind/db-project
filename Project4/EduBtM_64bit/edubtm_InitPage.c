@@ -63,7 +63,7 @@ Four edubtm_InitInternal(
     Boolean root,		/* IN Is it root ? */
     Boolean isTmp)              /* IN Is it temporary ? - COOKIE12FEB98 */
 {
-    Four e;			/* error number */
+	Four e;			/* error number */
     BtreeInternal *page;	/* a page pointer */
 
     e = BfM_GetNewTrain(internal, &page, PAGE_BUF);
@@ -71,7 +71,7 @@ Four edubtm_InitInternal(
 
     page->hdr.pid = *internal;
     SET_PAGE_TYPE(page, BTREE_PAGE_TYPE); //page->hdr.flags
-    page->hdr.type |= INTERNAL;
+    page->hdr.type = INTERNAL;
     if(root == TRUE)
         page->hdr.type |= ROOT;
     
@@ -87,6 +87,7 @@ Four edubtm_InitInternal(
     if( e < 0 ) ERR(e);
     sizeof(DeallocListElem);
 
+    
     return(eNOERROR);
     
 }  /* edubtm_InitInternal() */
@@ -115,7 +116,7 @@ Four edubtm_InitLeaf(
     Boolean root,		/* IN Is it root ? */
     Boolean isTmp)              /* IN Is it temporary ? */
 {
-    Four e;			/* error number */
+    	Four e;			/* error number */
     BtreeLeaf *page;		/* a page pointer */
 
     e = BfM_GetNewTrain(leaf, &page, PAGE_BUF);
@@ -123,7 +124,7 @@ Four edubtm_InitLeaf(
 
     page->hdr.pid = *leaf;
     SET_PAGE_TYPE(page, BTREE_PAGE_TYPE); //page->hdr.flags
-    page->hdr.type |= LEAF;
+    page->hdr.type = LEAF;
     if(root == TRUE)
         page->hdr.type |= ROOT;
     

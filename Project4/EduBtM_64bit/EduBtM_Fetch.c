@@ -80,7 +80,7 @@ Four EduBtM_Fetch(
     Four     stopCompOp,	/* IN comparison operator of stop condition */
     BtreeCursor *cursor)	/* OUT Btree Cursor */
 {
-    int i;
+	int i;
     Four e;		   /* error number */
 
     
@@ -142,7 +142,7 @@ Four edubtm_Fetch(
     Four                stopCompOp,     /* IN comparison operator of stop condition */
     BtreeCursor         *cursor)        /* OUT Btree Cursor */
 {
-    Four                e;              /* error number */
+	 Four                e;              /* error number */
     Four                cmp;            /* result of comparison */
     Two                 idx;            /* index */
     PageID              child;          /* child page when the root is an internla page */
@@ -204,7 +204,7 @@ Four edubtm_Fetch(
             }
             else{
                 cursor->flag = CURSOR_EOS;
-                e = BfM_FreeTrain(&root, PAGE_BUF);
+                e = BfM_FreeTrain(root, PAGE_BUF);
                 if(e<0) ERR(e);
                 return(eNOERROR);
             }
@@ -216,13 +216,11 @@ Four edubtm_Fetch(
                     prevPid.volNo = root->volNo;
                     prevPid.pageNo = apage->bl.hdr.prevPage;
 
-                    e = BfM_FreeTrain(&root, PAGE_BUF);
+                    e = BfM_FreeTrain(root, PAGE_BUF);
                     if(e<0) ERR(e);
 
                     if(prevPid.pageNo == NIL){
                         cursor->flag = CURSOR_EOS;
-                        e = BfM_FreeTrain(&root, PAGE_BUF);
-                        if(e<0) ERR(e);
                         return(eNOERROR);
                     }
 
@@ -244,7 +242,7 @@ Four edubtm_Fetch(
                 }
                 else{ //no less value
                     cursor->flag = CURSOR_EOS;
-                    e = BfM_FreeTrain(&root, PAGE_BUF);
+                    e = BfM_FreeTrain(root, PAGE_BUF);
                     if(e<0) ERR(e);
                     return(eNOERROR);
                 }
@@ -262,7 +260,7 @@ Four edubtm_Fetch(
                 }
                 else{
                     cursor->flag = CURSOR_EOS;
-                    e = BfM_FreeTrain(&root, PAGE_BUF);
+                    e = BfM_FreeTrain(root, PAGE_BUF);
                     if(e<0) ERR(e);
                     return(eNOERROR);
                 }
@@ -276,13 +274,11 @@ Four edubtm_Fetch(
                     nextPid.volNo = root->volNo;
                     nextPid.pageNo = apage->bl.hdr.nextPage;
 
-                    e = BfM_FreeTrain(&root, PAGE_BUF);
+                    e = BfM_FreeTrain(root, PAGE_BUF);
                     if(e<0) ERR(e);
 
                     if(nextPid.pageNo == NIL){
                         cursor->flag = CURSOR_EOS;
-                        e = BfM_FreeTrain(&root, PAGE_BUF);
-                        if(e<0) ERR(e);
                         return(eNOERROR);
                     }
 
@@ -302,13 +298,11 @@ Four edubtm_Fetch(
                         nextPid.volNo = root->volNo;
                         nextPid.pageNo = apage->bl.hdr.nextPage;
 
-                        e = BfM_FreeTrain(&root, PAGE_BUF);
+                        e = BfM_FreeTrain(root, PAGE_BUF);
                         if(e<0) ERR(e);
 
                         if(nextPid.pageNo == NIL){
                             cursor->flag = CURSOR_EOS;
-                            e = BfM_FreeTrain(&root, PAGE_BUF);
-                            if(e<0) ERR(e);
                             return(eNOERROR);
                         }
 
@@ -342,13 +336,11 @@ Four edubtm_Fetch(
                         nextPid.volNo = root->volNo;
                         nextPid.pageNo = apage->bl.hdr.nextPage;
 
-                        e = BfM_FreeTrain(&root, PAGE_BUF);
+                        e = BfM_FreeTrain(root, PAGE_BUF);
                         if(e<0) ERR(e);
 
                         if(nextPid.pageNo == NIL){
                             cursor->flag = CURSOR_EOS;
-                            e = BfM_FreeTrain(&root, PAGE_BUF);
-                            if(e<0) ERR(e);
                             return(eNOERROR);
                         }
 

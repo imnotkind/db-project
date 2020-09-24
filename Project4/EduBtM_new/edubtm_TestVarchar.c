@@ -385,7 +385,8 @@ Four edubtm_TestVarchar_3_1(
 	e = EduBtM_Fetch(rootPid, kdesc, &startKVal, startCompOp, &stopKVal, stopCompOp, &cursor);
 	if (e < eNOERROR) ERR(e);
 
-	printf("Key: %s, OID: (%d, %d, %d, %d)\n", obj, cursor.oid.volNo, cursor.oid.pageNo, cursor.oid.slotNo, cursor.oid.unique);
+	printf("%d Key: %s, OID: (%d, %d, %d, %d)\n", cursor.flag, obj, cursor.oid.volNo, cursor.oid.pageNo, cursor.oid.slotNo, cursor.oid.unique);
+	//printf("Key: %s, OID: (%d, %d, %d, %d)\n", obj, cursor.oid.volNo, cursor.oid.pageNo, cursor.oid.slotNo, cursor.oid.unique);
     
 	fgets(str, 100, fp);
 	edubtm_CheckObject(&cursor.oid, fp, pass);

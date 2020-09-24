@@ -73,7 +73,7 @@ Boolean edubtm_BinarySearchInternal(
     KeyValue      	*kval,		/* IN key value */
     Two          	*idx)		/* OUT index to be returned */
 {
-    Two  		low;		/* low index */
+	Two  		low;		/* low index */
     Two  		mid;		/* mid index */
     Two  		high;		/* high index */
     Four 		cmp;		/* result of comparison */
@@ -99,20 +99,22 @@ Boolean edubtm_BinarySearchInternal(
         while(low <= high){
             mid = (low + high) / 2;
             entry = ipage->data + ipage->slot[-mid];
-            cmp = edubtm_KeyCompare(kdesc, kval, entry->kval);
+            cmp = edubtm_KeyCompare(kdesc, kval, &entry->klen);
             if(cmp == EQUAL){
                 *idx = mid;
                 return TRUE;
             }
-            else if(cmp == GREATER){
-                high = mid - 1;
+            else if(cmp == GREAT){
+                low = mid + 1;
             }
             else if(cmp == LESS){
-                low = mid + 1;
+                high = mid - 1;
             }
         }
 
+
         *idx = high; //smaller one
+        
         return FALSE;
 
     }
@@ -151,7 +153,7 @@ Boolean edubtm_BinarySearchLeaf(
     KeyValue  		*kval,		/* IN key value */
     Two       		*idx)		/* OUT index to be returned */
 {
-    Two  		low;		/* low index */
+	Two  		low;		/* low index */
     Two  		mid;		/* mid index */
     Two  		high;		/* high index */
     Four 		cmp;		/* result of comparison */
@@ -177,21 +179,23 @@ Boolean edubtm_BinarySearchLeaf(
 
         while(low <= high){
             mid = (low + high) / 2;
+
             entry = lpage->data + lpage->slot[-mid];
-            cmp = edubtm_KeyCompare(kdesc, kval, entry->kval);
+            cmp = edubtm_KeyCompare(kdesc, kval, &entry->klen);
             if(cmp == EQUAL){
                 *idx = mid;
                 return TRUE;
             }
-            else if(cmp == GREATER){
-                high = mid - 1;
+            else if(cmp == GREAT){
+                low = mid + 1;
             }
             else if(cmp == LESS){
-                low = mid + 1;
+                high = mid - 1;
             }
         }
 
         *idx = high; //smaller one
+        
         return FALSE;
 
     }

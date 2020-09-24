@@ -70,7 +70,7 @@ Four edubtm_FirstObject(
     Four     		stopCompOp,	/* IN comparison operator of stop condition */
     BtreeCursor 	*cursor)	/* OUT The first ObjectID in the Btree */
 {
-    int			i;
+	int			i;
     Four 		e;		/* error */
     Four 		cmp;		/* result of comparison */
     PageID 		curPid;		/* PageID of the current page */
