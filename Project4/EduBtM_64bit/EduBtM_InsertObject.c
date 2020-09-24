@@ -74,6 +74,7 @@ Four EduBtM_InsertObject(
     Boolean lf;			/* for merging */
     InternalItem item;		/* Internal Item */
     SlottedPage *catPage;	/* buffer page containing the catalog object */
+    sm_CatOverlayForSysTables *catSysEntry;
     sm_CatOverlayForBtree *catEntry; /* pointer to Btree file catalog information */
     PhysicalFileID pFid;	 /* B+-tree file's FileID */
 
@@ -96,7 +97,14 @@ Four EduBtM_InsertObject(
         if(kdesc->kpart[i].type!=SM_INT && kdesc->kpart[i].type!=SM_VARSTRING)
             ERR(eNOTSUPPORTED_EDUBTM);
     }
-    
+
+    e = edubtm_Insert(catObjForFile, root, kdesc, kval, oid, &lh, &lf, &item, dlPool, dlHead);
+    if(e<0) ERR(e);
+
+    if(lh){
+        e = edubtm_root_insert(catObjForFile, root, &item);
+        if(e<0) ERR(e);
+    }
     
     return(eNOERROR);
     

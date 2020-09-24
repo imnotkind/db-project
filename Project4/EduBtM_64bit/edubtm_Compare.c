@@ -83,6 +83,7 @@ Four edubtm_KeyCompare(
     double                      d1, d2;		/* double values */
     PageID                      pid1, pid2;	/* PageID values */
     OID                         oid1, oid2;     /* OID values */
+              
     
 
     /* Error check whether using not supported functionality by EduBtM */
@@ -90,6 +91,47 @@ Four edubtm_KeyCompare(
     {
         if(kdesc->kpart[i].type!=SM_INT && kdesc->kpart[i].type!=SM_VARSTRING)
             ERR(eNOTSUPPORTED_EDUBTM);
+    }
+
+    for(i=0; i<kdesc->nparts; i++)
+    {
+        if(kdesc->kpart[i].type == SM_INT){
+            i1 = *(int*)key1->val;
+            i2 = *(int*)key2->val;
+
+            if(i1 > i2){
+                return GREAT;
+            }
+            else if(i1 < i2){
+                return LESS;
+            }
+            else if(i1 == i2){
+                return EQUAL;
+            }
+        }
+        else if(kdesc->kpart[i].type == SM_VARSTRING){
+            len1 = key1->len;
+            len2 = key2->len;
+
+            for(i=0; i< MIN(len1, len2); i++){
+                if(key1->val[i] > key2->val[i]){
+                    return GREAT;
+                }
+                else if(key1->val[i] < key2->val[i]){
+                    return LESS;
+                }
+            }
+
+            if(len1 > len2){
+                return GREAT;
+            }
+            else if(len1 < len2){
+                return LESS;
+            }
+            else if(len1 == len2){
+                return EQUAL;
+            }
+        }
     }
 
         

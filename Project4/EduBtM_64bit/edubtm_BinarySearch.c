@@ -88,6 +88,37 @@ Boolean edubtm_BinarySearchInternal(
             ERR(eNOTSUPPORTED_EDUBTM);
     }
 
+    if(ipage->hdr.nSlots < 0){
+        *idx = -1;
+        return FALSE;
+    }
+    else{
+        low = 0;
+        high = ipage->hdr.nSlots - 1;
+
+        while(low <= high){
+            mid = (low + high) / 2;
+            entry = ipage->data + ipage->slot[-mid];
+            cmp = edubtm_KeyCompare(kdesc, kval, entry->kval);
+            if(cmp == EQUAL){
+                *idx = mid;
+                return TRUE;
+            }
+            else if(cmp == GREATER){
+                high = mid - 1;
+            }
+            else if(cmp == LESS){
+                low = mid + 1;
+            }
+        }
+
+        *idx = high; //smaller one
+        return FALSE;
+
+    }
+
+    
+
     
 } /* edubtm_BinarySearchInternal() */
 
@@ -133,6 +164,36 @@ Boolean edubtm_BinarySearchLeaf(
     {
         if(kdesc->kpart[i].type!=SM_INT && kdesc->kpart[i].type!=SM_VARSTRING)
             ERR(eNOTSUPPORTED_EDUBTM);
+    }
+
+
+    if(lpage->hdr.nSlots < 0){
+        *idx = -1;
+        return FALSE;
+    }
+    else{
+        low = 0;
+        high = lpage->hdr.nSlots - 1;
+
+        while(low <= high){
+            mid = (low + high) / 2;
+            entry = lpage->data + lpage->slot[-mid];
+            cmp = edubtm_KeyCompare(kdesc, kval, entry->kval);
+            if(cmp == EQUAL){
+                *idx = mid;
+                return TRUE;
+            }
+            else if(cmp == GREATER){
+                high = mid - 1;
+            }
+            else if(cmp == LESS){
+                low = mid + 1;
+            }
+        }
+
+        *idx = high; //smaller one
+        return FALSE;
+
     }
 
     
