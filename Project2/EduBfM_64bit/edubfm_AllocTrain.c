@@ -102,10 +102,6 @@ Four edubfm_AllocTrain(
         //nbufs : total count of buffer element
         //if reached to end, go to the start by %
 
-        if(i >= 2*BI_NBUFS(type)){ 
-            //if we iterated all buffer elements twice, then we just have no fixed==0 element
-            ERR(eNOUNFIXEDBUF_BFM);
-        }
     }
     
 
