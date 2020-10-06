@@ -251,6 +251,7 @@ Four eduom_CreateObject(
             if(catEntry->availSpaceList50 >= 0){
                 pid.pageNo = catEntry->availSpaceList50;
                 pid.volNo = catEntry->fid.volNo;
+                pageSelected = TRUE;
             }
         }
 
@@ -270,7 +271,6 @@ Four eduom_CreateObject(
         e = BfM_FreeTrain(&pid, 0);
         if( e < 0 ) ERR( e );
 
-        /* Get the first extent number of the file */
         e = RDsM_PageIdToExtNo((PageID*)&pFid, &firstExt);
         if( e < 0 ) ERR( e );
 
@@ -283,11 +283,9 @@ Four eduom_CreateObject(
             nearPid.volNo = catEntry->fid.volNo;
         }
 
-        /* Allocate a new page */
         e = RDsM_AllocTrains(catEntry->fid.volNo, firstExt, &nearPid, catEntry->eff, 1, PAGESIZE2, &pid);
         if( e < 0 ) ERR( e );
 
-        /* Fix the page that has been newly allocated on the disk to the buffer */
         e = BfM_GetNewTrain(&pid, (char **)&apage, PAGE_BUF);
         if( e < 0 ) ERR( e );
 
@@ -305,7 +303,6 @@ Four eduom_CreateObject(
         apage->slot[0].offset = EMPTYSLOT;
         SET_PAGE_TYPE(apage, SLOTTED_PAGE_TYPE); //flags
 
-        /* Insert the page into the list of pages of the file */
         e = om_FileMapAddPage(catObjForFile, (PageID*)nearObj, &pid);
         if (e < 0) ERRB1(e, &pid, PAGE_BUF);
 
@@ -313,7 +310,6 @@ Four eduom_CreateObject(
     }
     else{ //if page has enough space
 
-        /* Delete the page from the available space list */
         e = om_RemoveFromAvailSpaceList(catObjForFile, &pid, apage);
         if (e < 0) ERRB1(e, &pid, PAGE_BUF);
 
@@ -342,7 +338,6 @@ Four eduom_CreateObject(
         apage->header.nSlots += 1;
     }
     apage->slot[-i].offset = apage->header.free;
-    /* Allocate a unique number to be used for the page */
     e = om_GetUnique(&pid, &apage->slot[-i].unique);
     if( e < 0 ) ERR( e );
 
@@ -353,11 +348,9 @@ Four eduom_CreateObject(
     oid->pageNo = pid.pageNo;
     oid->unique = apage->slot[-i].unique;
 
-    /* Insert the page into the available space list*/
     e = om_PutInAvailSpaceList(catObjForFile, &pid, apage);
     if (e < 0) ERRB1(e, &pid, PAGE_BUF);
 
-    /* Set the DIRTY bit */
     e = BfM_SetDirty(&pid, PAGE_BUF);
     if (e < 0) ERRB1(e, &pid, PAGE_BUF);
 

@@ -93,7 +93,6 @@ Four EduOM_NextObject(
     
 
     if(curOID == NULL){
-        /* Fix the page that contains the catalog object to the buffer */
         e = BfM_GetTrain((TrainID*)catObjForFile, (char**)&catPage, PAGE_BUF);
         if( e < 0 ) ERR( e );
 
@@ -102,7 +101,6 @@ Four EduOM_NextObject(
         pid.pageNo = catEntry->firstPage;
         i = 0;
 
-        /* Unfix the page that contains the catalog object from the buffer */
         e = BfM_FreeTrain((TrainID*)catObjForFile, PAGE_BUF);
         if( e < 0 ) ERR( e );
         

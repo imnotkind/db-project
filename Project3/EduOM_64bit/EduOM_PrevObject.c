@@ -89,15 +89,13 @@ Four EduOM_PrevObject(
 
     
     if(curOID == NULL){
-        /* Fix the page that contains the catalog object to the buffer */
         e = BfM_GetTrain((TrainID*)catObjForFile, (char**)&catPage, PAGE_BUF);
         if( e < 0 ) ERR( e );
 
         GET_PTR_TO_CATENTRY_FOR_DATA(catObjForFile, catPage, catEntry);
         pid.volNo = catEntry->fid.volNo;
         pid.pageNo = catEntry->lastPage;
-
-        /* Unfix the page that contains the catalog object from the buffer */
+        
         e = BfM_FreeTrain((TrainID*)catObjForFile, PAGE_BUF);
         if( e < 0 ) ERR( e );
         

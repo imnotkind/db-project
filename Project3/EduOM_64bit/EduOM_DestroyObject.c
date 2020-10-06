@@ -123,13 +123,6 @@ Four EduOM_DestroyObject(
     e = BfM_GetTrain(&pid, &apage, PAGE_BUF);
     if( e < 0 ) ERR( e );
 
-    
-    /* do not do error handling .. yet
-    if(EQUAL_FILEID(apage->header.fid, catEntry->fid)){
-        ERR(eBADOBJECTID_OM);
-    }
-    */
-
     e = om_RemoveFromAvailSpaceList(catObjForFile, &pid, apage);
     if (e < 0) ERRB1(e, &pid, PAGE_BUF);
 
@@ -154,20 +147,18 @@ Four EduOM_DestroyObject(
 
 
     //if no more object in this page AND page is not the first page of the file
-    if(apage->header.nSlots == 0 && !EQUAL_PAGEID(pid, pFid)){ //&& apage->slot[0].offset == -1){
+    if(apage->header.nSlots == 0 && !EQUAL_PAGEID(pid, pFid)){
 
-        /*Delete the page from the list of pages of the file*/
         e = om_FileMapDeletePage(catObjForFile, &pid);
         if (e < 0) ERRB1(e, &pid, PAGE_BUF);
 
         e = BfM_FreeTrain(&pid, PAGE_BUF);
         if( e < 0 ) ERR( e );
 
-        /* Insert the deallocated page into the dealloclist */
         e = Util_getElementFromPool(dlPool, &dlElem);
         if( e < 0 ) ERR( e );
         dlElem->type = DL_PAGE;
-        dlElem->elem.pid= pid; /* ID of the deallocated page */
+        dlElem->elem.pid = pid;
         dlElem->next = dlHead->next;
         dlHead->next = dlElem;
 
@@ -187,31 +178,6 @@ Four EduOM_DestroyObject(
         return(eNOERROR);
         
     }
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-    
-
-
-
-   
-
-    
     
     
 } /* EduOM_DestroyObject() */
