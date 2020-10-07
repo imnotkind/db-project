@@ -106,7 +106,6 @@ Four edubtm_Insert(
     Two                         iEntryOffset;           /* starting offset of an internal entry */
     SlottedPage                 *catPage;               /* buffer page containing the catalog object */
     sm_CatOverlayForBtree       *catEntry;              /* pointer to Btree file catalog information */
-    sm_CatOverlayForSysTables   *catSysEntry;
     PhysicalFileID              pFid;                   /* B+-tree file's FileID */
 
 
@@ -118,27 +117,12 @@ Four edubtm_Insert(
             ERR(eNOTSUPPORTED_EDUBTM);
     }
 
-    e = BfM_GetTrain(catObjForFile, &catPage, PAGE_BUF);
-    if(e<0) ERR(e);
-
-    GET_PTR_TO_CATENTRY_FOR_BTREE(catObjForFile, catPage, catSysEntry);
-    catEntry = &catSysEntry->btree;
-    pFid.volNo = catEntry->fid.volNo;
-    pFid.pageNo = catEntry->firstPage;
-
-    e = BfM_FreeTrain(catObjForFile, PAGE_BUF);
-    if(e<0) ERR(e);
-
-
     e = BfM_GetTrain(root, &apage, PAGE_BUF);
     if(e<0) ERR(e);
     
     if(apage->any.hdr.type & LEAF){ //root is leaf
         e = edubtm_InsertLeaf(catObjForFile, root, apage, kdesc, kval, oid, f, h, item);
         if(e<0) ERR(e);
-
-
-        
 
         e = BfM_SetDirty(root, PAGE_BUF);
         if(e<0) ERR(e);

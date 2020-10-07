@@ -12,10 +12,10 @@
 root부터 시작해서 모든 tree의 page를 free하는건데, 이는 recursive하게 불리는 edubtm_FreePages가 해주는 일이라 그냥 edubtm_FreePages를 root에 대해서 call해주기만 하면 된다.
 
 ### EduBtM_InsertObject()
-
 edubtm_Insert로 삽입하고, 만약 split이 일어났다면 edubtm_root_insert를 불러준다.
 
 ### EduBtM_DeleteObject()
+edubtm_Delete로 삭제하고, 만약 underflow가 일어났다면 btm_root_delete를 불러주고, overflow가 일어났다면 edubtm_root_insert를 불러준다.
 
 ### EduBtM_Fetch()
 b+ tree에서 원하는 값을 search해주는 함수다.  
@@ -38,7 +38,7 @@ leaf면 그냥 할당 해제하는 걸로 끝나고, internal이면 모든 entry
 ### edubtm_Insert()
 root가 leaf인 경우 edubtm_InsertLeaf를 호출한다.  
 internal인 경우 edubtm_BinarySearchInternal 로 object가 들어가야 하는 정렬된 위치를 찾는다.  
-정렬에 맞는 위치 idx를 찾았다면 idx에 해당하는 subtree를 root로 하게 edubtm_Insert를 호출하고, 이 과정에서 자식 페이지 split이 일어났다면 edubtm_InsertInternal로 internal item을 삽입해준다.
+정렬에 맞는 위치 idx를 찾았다면 idx에 해당하는 subtree를 root로 해서 edubtm_Insert를 recursive하게 호출하고, 이 과정에서 자식 페이지 split이 일어났다면 edubtm_InsertInternal로 internal item을 삽입해준다.
 
 
 ### edubtm_InsertLeaf()
@@ -46,7 +46,7 @@ internal인 경우 edubtm_BinarySearchInternal 로 object가 들어가야 하는
 split시 새로운 leaf page를 가리키는 InternalItem정보는 edubtm_SplitLeaf에서 넣어주므로 따로 처리할 필요는 없다.
 
 ### edubtm_InsertInternal()
-이 함수는 Internal item(entry)을 Internal page에다 삽입하는 함수다. 마찬가지로 노드 삽입이기 때문에, overflow가 일어날 수 있고, 그런 경우 edubtm_SplitInternal을 호출한다.  
+이 함수는 Internal item(entry)을 Internal page에다 삽입하는 함수다. 정보 삽입이기 때문에, overflow가 일어날 수 있고, 그런 경우 edubtm_SplitInternal을 호출한다.  
 edubtm_InsertLeaf과 비슷하게 split시 새로운 internal page를 가리키는 InternalItem정보는 edubtm_SplitInternal에서 넣어주므로 그냥 인자만 전달하면 된다.
 
 ### edubtm_SplitLeaf()
@@ -62,7 +62,6 @@ internal page에서 insertion overflow가 일어났을 경우 불리는 함수�
 원래 페이지(fpage)를 절반 이상 남겨놓고 나머지 entry들은 새로운 페이지(npage)에 저장한다.  
 ritem은 새로운 페이지를 가리키는 InternalItem이 되게 값을 넣어준다.  
 
-
 ### edubtm_root_insert()
 root 페이지에서 split이 일어났을 때 불리는 함수다.  
 split으로 새로 생성된 split 페이지를 인자로 받고,  
@@ -72,14 +71,19 @@ split으로 새로 생성된 split 페이지를 인자로 받고,
 원래 root를 새로운 root로 초기화한다. (원래 root -> 새로운 root 자리로 가게 됨)  
 
 ### edubtm_Delete()
-### edubtm_DeleteLeaf()
+root가 leaf인 경우 edubtm_DeleteLeaf를 호출한다.  
+root가 internal인 경우 edubtm_BinarySearchInternal 로 삭제할 object가 있는 위치를 찾는다.  
+위치 idx를 찾았다면 idx에 해당하는 child subtree를 root로 해서 edubtm_Delete를 recursive하게 호출하고, 이 과정에서 삭제로 인해 underflow가 일어났다면 btm_Underflow로 처리해준다. 또 자식 페이지 underflow으로 인해 부모 페이지에서 overflow가 일어났다면 edubtm_InsertInternal을 호출해서 internal item을 삽입해준다.    
 
+### edubtm_DeleteLeaf()
+삭제할 entry index를 edubtm_BinarySearchLeaf로 찾고, objectID가 일치하는지 btm_ObjectIdComp로 확인해준 후에, 슬롯을 덮어쓰는 형식으로 삭제할 slot index를 지워버린다.  
+
+그 후 자유 공간의 크기가 페이지 data 영역의 절반보다 커졌다면, underflow로 판정해 f를 TRUE로 넣는다.  
 
 ### edubtm_CompactLeafPage()
 EduOM에서 했던 CompactPage와 거의 유사한데, 그냥 Object들이 LeafEntry가 되었다고만 생각하면 된다.  
 슬롯을 쭉 돌면서 데이터 영역에 차곡차곡 쌓는다는 느낌으로 하면 되고,  
 파라미터로 slotNo가 있으면 걔만 예외로 마지막에 쌓아준다.  
-
 
 ### edubtm_CompactInternalPage()
 edubtm_CompactLeafPage와 InternalEntry라는 것만 빼면 똑같다.
@@ -136,7 +140,7 @@ internal entry에서 있는 key는 해당하는 subtree의 최소 키이기 때�
 
 ## 느낀 점 discussion
 
-이건 뭐 아무 생각도 안 들고 그냥 양이 살인적이었다.  
+이건 뭐 일단 양이 살인적이었다.  
 구현해야 하는 internal function 리스트를 보고 정말 울 뻔했다.  
 
 catObjForFile 이 sm_SysTable을 가리키는지 sm_Btree를 가리키는지 확실하게 알려줬으면 한다 (매뉴얼에 있기는 한데 너무 조그맣게 있고 코드에도 있었으면..)  
@@ -149,4 +153,4 @@ KeyCompare에서 VARSTRING의 경우 어떻게 비교해야하는지 매뉴얼�
 B+tree는 안 그래도 복잡한데 C까지 겹쳐서 너무나도 끔찍했다.  
 복잡한 알고리즘을 로우레벨로 구현하는 건 생각보다 너무나도 어려운 일이다.  
 매뉴얼도 너무 불친절해 시간을 너무 많이 썼다.  
-
+스켈레톤 코드에 일관성이 깨진 곳이 너무 많은데, 이제는 코드 양이 많아서 고치기도 피곤하다.  
