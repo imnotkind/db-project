@@ -108,45 +108,35 @@ Four edubtm_FirstObject(
         if(e<0) ERR(e);
     }
 
-    if(apage->bl.hdr.nSlots > 0){
-        lEntry = apage->bl.data + apage->bl.slot[0];
-        alignedKlen = ALIGNED_LENGTH(lEntry->klen);
-        oidArray = &lEntry->kval[alignedKlen];
+
+    lEntry = apage->bl.data + apage->bl.slot[0];
+    alignedKlen = ALIGNED_LENGTH(lEntry->klen);
+    oidArray = &lEntry->kval[alignedKlen];
 
 
-        cursor->key.len = lEntry->klen;
-        memcpy(cursor->key.val, lEntry->kval, lEntry->klen);
-        cursor->slotNo = 0;
-        cursor->leaf = curPid;
-        cursor->oid = *oidArray;
+    cursor->key.len = lEntry->klen;
+    memcpy(cursor->key.val, lEntry->kval, lEntry->klen);
+    cursor->slotNo = 0;
+    cursor->leaf = curPid;
+    cursor->oid = *oidArray;
 
-        if(stopCompOp != SM_EOF){
-            cmp = edubtm_KeyCompare(kdesc, &cursor->key, stopKval);
-            if(cmp == EQUAL){
-                cursor->flag = CURSOR_ON;
 
-                if(stopCompOp == SM_LT){
-                    cursor->flag = CURSOR_EOS;
-                }
+    cmp = edubtm_KeyCompare(kdesc, &cursor->key, stopKval);
+    if(cmp == EQUAL){
+        cursor->flag = CURSOR_ON;
 
-            }
-            else if(cmp == GREATER){
-                cursor->flag = CURSOR_EOS;
-            }
-            else if(cmp == LESS){
-                cursor->flag = CURSOR_ON;
-            }
+        if(stopCompOp == SM_LT){
+            cursor->flag = CURSOR_EOS;
         }
-        else{
-            cursor->flag = CURSOR_ON;
-        }
-        
-
 
     }
-    else{
+    else if(cmp == GREATER){
         cursor->flag = CURSOR_EOS;
     }
+    else if(cmp == LESS){
+        cursor->flag = CURSOR_ON;
+    }
+
 
     e = BfM_FreeTrain(&curPid, PAGE_BUF);
     if(e<0) ERR(e);

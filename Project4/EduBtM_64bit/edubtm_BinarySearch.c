@@ -116,7 +116,6 @@ Boolean edubtm_BinarySearchInternal(
         *idx = high; //smaller one
         
         return FALSE;
-
     }
 
     
@@ -197,7 +196,6 @@ Boolean edubtm_BinarySearchLeaf(
         *idx = high; //smaller one
         
         return FALSE;
-
     }
 
     

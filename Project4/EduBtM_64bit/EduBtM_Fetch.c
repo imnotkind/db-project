@@ -373,34 +373,29 @@ Four edubtm_Fetch(
         cursor->key.len = lEntry->klen;
         memcpy(cursor->key.val, lEntry->kval, lEntry->klen);
         cursor->oid = *oidArray;
-
-        cmp = edubtm_KeyCompare(kdesc, &cursor->key, stopKval);
-        if(cmp == EQUAL){
-            if(stopCompOp == SM_EQ || stopCompOp == SM_GE || stopCompOp == SM_LE){
-                cursor->flag = CURSOR_ON;
+        cursor->flag = CURSOR_ON;
+        
+        
+        if(stopCompOp == SM_GE || stopCompOp == SM_GT || stopCompOp == SM_LE || stopCompOp == SM_LT){
+            cmp = edubtm_KeyCompare(kdesc, &cursor->key, stopKval);
+            if(cmp == EQUAL){
+                if(stopCompOp == SM_GT || stopCompOp == SM_LT){
+                    cursor->flag = CURSOR_INVALID;
+                }
             }
-            else{
-                cursor->flag = CURSOR_EOS;
+            else if(cmp == GREATER){
+                if(stopCompOp == SM_LE || stopCompOp == SM_LT){
+                    cursor->flag = CURSOR_INVALID;
+                }
+
+            }
+            else if(cmp == LESS){
+                if(stopCompOp == SM_GE || stopCompOp == SM_GT){
+                    cursor->flag = CURSOR_INVALID;
+                }
             }
         }
-        else if(cmp == GREATER){
-            if(stopCompOp == SM_GE || stopCompOp == SM_GT){
-                cursor->flag = CURSOR_ON;
-            }
-            else{
-                cursor->flag = CURSOR_EOS;
-            }
-
-        }
-        else if(cmp == LESS){
-            if(stopCompOp == SM_LE || stopCompOp == SM_LT){
-                cursor->flag = CURSOR_ON;
-            }
-            else{
-                cursor->flag = CURSOR_EOS;
-            }
-
-        }
+        
 
 
         e = BfM_FreeTrain(&leafPid, PAGE_BUF);

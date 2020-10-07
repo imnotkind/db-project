@@ -146,7 +146,6 @@ Four edubtm_Insert(
     else if(apage->any.hdr.type & INTERNAL) {
         
         edubtm_BinarySearchInternal(apage, kdesc, kval, &idx);
-        //printf("IIIIIIIIIIIIIIIIIidx : %d\n", idx);
 
         if(idx == -1){ //key is smaller than any index entry key
             newPid.volNo = root->volNo;
@@ -171,7 +170,6 @@ Four edubtm_Insert(
             tKey.len = litem.klen;
             memcpy(tKey.val, litem.kval, litem.klen);
             
-
             edubtm_BinarySearchInternal(apage, kdesc, &tKey, &idx);
 
 

@@ -261,7 +261,6 @@ Four edubtm_FetchNext(
         else{
             next->flag = CURSOR_EOS;
         }
-
     }
 
     e = BfM_FreeTrain(&leaf, PAGE_BUF);

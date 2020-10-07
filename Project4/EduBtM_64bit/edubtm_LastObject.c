@@ -113,45 +113,35 @@ Four edubtm_LastObject(
         if(e<0) ERR(e);
     }
 
-    //edubtm_DumpBtreePage(&curPid, SM_INT);
 
-    if(apage->bl.hdr.nSlots > 0){
-        lEntry = apage->bl.data + apage->bl.slot[-(apage->bl.hdr.nSlots - 1)];
-        alignedKlen = ALIGNED_LENGTH(lEntry->klen);
-        oidArray = &lEntry->kval[alignedKlen];
+    lEntry = apage->bl.data + apage->bl.slot[-(apage->bl.hdr.nSlots - 1)];
+    alignedKlen = ALIGNED_LENGTH(lEntry->klen);
+    oidArray = &lEntry->kval[alignedKlen];
 
 
-        cursor->key.len = lEntry->klen;
-        memcpy(cursor->key.val, lEntry->kval, lEntry->klen);
-        cursor->slotNo = apage->bl.hdr.nSlots - 1;
-        cursor->leaf = curPid;
-        cursor->oid = *oidArray;
+    cursor->key.len = lEntry->klen;
+    memcpy(cursor->key.val, lEntry->kval, lEntry->klen);
+    cursor->slotNo = apage->bl.hdr.nSlots - 1;
+    cursor->leaf = curPid;
+    cursor->oid = *oidArray;
 
-        if(stopCompOp != SM_BOF){
-            cmp = edubtm_KeyCompare(kdesc, &cursor->key, stopKval);
-            if(cmp == EQUAL){
-                cursor->flag = CURSOR_ON;
 
-                if(stopCompOp == SM_GT){
-                    cursor->flag = CURSOR_EOS;
-                }
+    cmp = edubtm_KeyCompare(kdesc, &cursor->key, stopKval);
+    if(cmp == EQUAL){
+        cursor->flag = CURSOR_ON;
 
-            }
-            else if(cmp == GREATER){
-                cursor->flag = CURSOR_ON;
-            }
-            else if(cmp == LESS){
-                cursor->flag = CURSOR_EOS;
-            }
+        if(stopCompOp == SM_GT){
+            cursor->flag = CURSOR_EOS;
         }
-        else{
-            cursor->flag = CURSOR_ON;
-        }
-    
+
     }
-    else{
+    else if(cmp == GREATER){
+        cursor->flag = CURSOR_ON;
+    }
+    else if(cmp == LESS){
         cursor->flag = CURSOR_EOS;
     }
+
 
     e = BfM_FreeTrain(&curPid, PAGE_BUF);
     if(e<0) ERR(e);

@@ -269,7 +269,7 @@ Four edubtm_SplitLeaf(
     LeafItem                    *item,          /* IN the item which will be inserted */
     InternalItem                *ritem)         /* OUT the item which will be returned by spliting */
 {
-    	Four                        e;              /* error number */
+    Four                        e;              /* error number */
     Two                         i;              /* slot No. in the splitted pages */
     Two                         j;              /* slot No. in the given page, fpage */
     Two                         k;              /* slot No. in the new page */
@@ -294,11 +294,6 @@ Four edubtm_SplitLeaf(
     Boolean                     flag;           
     Boolean                     isTmp;
     Boolean                     itemToGo;    /* whether our item is in original page or new page*/
- 
-    
-    
-
-    memcpy(&tpage, fpage, PAGESIZE); //maybe use tpage?
 
     e = btm_AllocPage(catObjForFile, &fpage->hdr.pid, &newPid); //OUT : newPid
     if(e<0) ERR(e);

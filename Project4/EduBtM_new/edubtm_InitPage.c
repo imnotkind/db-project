@@ -85,7 +85,6 @@ Four edubtm_InitInternal(
 
     e = BfM_FreeTrain(internal, PAGE_BUF);
     if( e < 0 ) ERR(e);
-    sizeof(DeallocListElem);
 
     
     return(eNOERROR);
@@ -116,7 +115,7 @@ Four edubtm_InitLeaf(
     Boolean root,		/* IN Is it root ? */
     Boolean isTmp)              /* IN Is it temporary ? */
 {
-    	Four e;			/* error number */
+    Four e;			/* error number */
     BtreeLeaf *page;		/* a page pointer */
 
     e = BfM_GetNewTrain(leaf, &page, PAGE_BUF);
