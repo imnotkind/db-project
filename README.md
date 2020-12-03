@@ -1,3 +1,3 @@
 # db-project
 
-A shit
+A piece of shit
