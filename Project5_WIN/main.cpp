@@ -492,7 +492,7 @@ public:
 /* MY CODE END */
 
 
-/* using std::map
+/*
 class InMemoryIndex {
 public:
 	std::map<uint64_t, int8_t> index;
