@@ -421,8 +421,11 @@ public:
 		return ret;
 
 	}
-	void Search(uint64_t key1, uint64_t key2)
+	uint64_t Search(uint64_t key1, int8_t num)
 	{
+		uint64_t ret = 0; //sum
+		int8_t count = 0;
+
 		// check if tree is empty
 		if (NULL == root)
 		{
@@ -473,7 +476,7 @@ public:
 				}
 
 				// check if key is within the search range
-				if ((key1 <= keys[index - keys.begin()]) && (keys[index - keys.begin()] <= key2))
+				if ((key1 <= keys[index - keys.begin()]))
 				{
 					if (!firstPass)
 					{
@@ -482,6 +485,12 @@ public:
 
 					// display the key and its corresponding values
 					//outputFile << values[index - keys.begin()] << ",";
+					ret += values[index - keys.begin()];
+					count += 1;
+
+					if (count == num) {
+						break;
+					}
 
 				}
 
@@ -510,6 +519,8 @@ public:
 
 			delete (path);
 		}
+
+		return ret;
 	}
 
 	~BPlusTree()
@@ -529,7 +540,7 @@ class InMemoryIndex
 	BPlusTree tree;
 
 public:
-	InMemoryIndex() : tree(300){
+	InMemoryIndex() : tree(300){ //order 300 b+ tree
 	}
 
 	void insert(uint64_t key, int8_t value)
@@ -552,7 +563,7 @@ public:
 
 	uint64_t scan(uint64_t key, int8_t num)
 	{
-		return 0;
+		return tree.Search(key, num);
 	}
 };
 
