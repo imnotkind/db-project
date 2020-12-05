@@ -14,67 +14,67 @@
 #define SCAN 3
  
 
-
 #include <stack>
 #include <algorithm>
 
-#define NUM_ARGS 2
-#define MIN_ORDER 3
-#define OUTPUT_FILE "output_file.txt"
 
-using namespace std;
-
-// generic node
 class Node
 {
 protected:
-	bool isLeaf;
-	vector<uint64_t> keys;
+	bool is_leaf;
+	std::vector<uint64_t> keys;
 
 public:
-	bool Get_IsLeaf() {
-		// return whether leaf or internal node
-		return isLeaf;
+	bool get_is_leaf() {
+		return is_leaf;
 	}
-	vector<uint64_t> Get_Keys() {
-		// return the vector of keys
+	std::vector<uint64_t> get_keys() {
 		return keys;
 	}
-	virtual void Insert(uint64_t key, int8_t value) {}
-	virtual void Insert(uint64_t key, Node* rightChild) {}
-	virtual void Insert(uint64_t key, Node* leftChild, Node* rightChild) {}
-	virtual void Search(uint64_t key) {}
-	virtual void Search(uint64_t key1, uint64_t key2) {}
-	virtual Node* Split(uint64_t* keyToParent) { return NULL; }
-	virtual vector<Node*> Get_Children() { vector<Node*> t;  return t; }
-	virtual vector<int8_t> Get_Values() { vector<int8_t> t;  return t; }
-	virtual Node* Get_Next() { return NULL; }
+
+	Node(int order, bool is_leaf_) : is_leaf{ is_leaf_ } {
+		keys.reserve(order); //order : max num of keys
+	}
+
+	virtual void insert_value(uint64_t key, int8_t value) {}
+	virtual void insert_right(uint64_t key, Node* rightChild) {}
+	virtual void insert_left_right(uint64_t key, Node* leftChild, Node* rightChild) {}
+	virtual Node* split(uint64_t* keyToParent, int order) { return NULL; }
+	virtual std::vector<Node*> get_children() { std::vector<Node*> t;  return t; }
+	virtual std::vector<int8_t> get_values() { std::vector<int8_t> t;  return t; }
+	virtual Node* get_next() { return NULL; }
 };
 
 // internal node
 class InternalNode : public Node
 {
 private:
-	vector<Node*> children;
+	std::vector<Node*> children;
 
 public:
-	InternalNode()
+
+	std::vector<Node*> get_children()
 	{
-		isLeaf = false;
+		return children;
 	}
 
-	void Insert(uint64_t key, Node* rightChild)
+	InternalNode(int order) : Node{ order, false }
+	{
+		children.reserve(order);
+	}
+
+	void insert_right(uint64_t key, Node* rightChild)
 	{
 		// insert key in to suitable position in the given internal node
-		vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
+		std::vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
 		keys.insert(index, key);
 
-		// insert right child in the immediately next index in the children vector
+		// insert right child in the immediately next index in the children std::vector
 		index = lower_bound(keys.begin(), keys.end(), key);
 		children.insert(children.begin() + (index - keys.begin() + 1), rightChild);
 	}
 
-	void Insert(uint64_t key, Node* leftChild, Node* rightChild)
+	void insert_left_right(uint64_t key, Node* leftChild, Node* rightChild)
 	{
 		// insert key, left child and right child
 		keys.push_back(key);
@@ -82,13 +82,13 @@ public:
 		children.push_back(rightChild);
 	}
 
-	Node* Split(uint64_t* keyToParent)
+	Node* split(uint64_t* keyToParent, int order)
 	{
 
 		uint64_t length = keys.size();
 
 		// create a new right internal node
-		InternalNode* rightNode = new InternalNode;
+		InternalNode* rightNode = new InternalNode(order);
 
 		// key to be moved up to the parent is the middle element in the current internal node
 		*keyToParent = keys[length / 2];
@@ -104,42 +104,44 @@ public:
 		// return the new right internal node
 		return rightNode;
 	}
-
-	vector<Node*> Get_Children()
-	{
-		// return the children vector
-		return children;
-	}
 };
 
 // leaf node
 class LeafNode : public Node
 {
 private:
-	LeafNode* prev;
-	LeafNode* next;
-	vector<int8_t> values;
+	LeafNode* prev = this;
+	LeafNode* next = this;
+	std::vector<int8_t> values;
 
 public:
-	LeafNode()
+	std::vector<int8_t> get_values()
 	{
-		isLeaf = true;
-		prev = this;
-		next = this;
+		return values;
 	}
 
-	void Insert(uint64_t key, int8_t value)
+	Node* get_next()
+	{
+		return next;
+	}
+
+	LeafNode(int order) : Node{ order, true }
+	{
+		values.reserve(order);
+	}
+
+	void insert_value(uint64_t key, int8_t value)
 	{
 		// search for the key in the given leaf node
-		vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
+		std::vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
 
 		// check if inserting a duplicate value for an existing key
 		if ((0 != keys.size()) && (index - keys.begin() != keys.size()) && (key == keys[index - keys.begin()]))
 		{
 			//update value! 
-			//cout << "FOUND : " << (int)values[index - keys.begin()] << endl;
+			//std::cout << "FOUND : " << (int)values[index - keys.begin()] << std::endl;
 			values[index - keys.begin()] = value;
-			//cout << "CHANGED : " << (int)values[index - keys.begin()] << endl;
+			//std::cout << "CHANGED : " << (int)values[index - keys.begin()] << std::endl;
 		}
 
 		// if inserting a new key and value
@@ -154,10 +156,10 @@ public:
 		}
 	}
 
-	Node* Split(uint64_t* keyToParent)
+	Node* split(uint64_t* keyToParent, int order)
 	{
 		// create a new right leaf node
-		LeafNode* rightNode = new LeafNode;
+		LeafNode* rightNode = new LeafNode(order);
 
 		// key to be moved up to the parent is the middle element in the current leaf node
 		*keyToParent = keys[keys.size() / 2];
@@ -179,17 +181,7 @@ public:
 		return rightNode;
 	}
 
-	vector<int8_t> Get_Values()
-	{
-		// return the vector of values
-		return values;
-	}
-
-	Node* Get_Next()
-	{
-		// return the pointer to the next leaf node
-		return next;
-	}
+	
 };
 
 // B+ tree
@@ -199,120 +191,119 @@ private:
 	int order;
 	Node* root;
 
-	void Search_Path(Node* node, uint64_t key, stack<Node*>* path)
+	void search_path(Node* node, uint64_t key, std::stack<Node*>* path)
 	{
 		// push node to stack
 		path->push(node);
 
 		// check if the node pushed to stack is an internal node
-		if (!node->Get_IsLeaf())
+		if (!node->get_is_leaf())
 		{
 			// search for the given key in the current node
-			vector<uint64_t> keys = node->Get_Keys();
-			vector<Node*> children = node->Get_Children();
-			vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
+			std::vector<uint64_t> keys = node->get_keys();
+			std::vector<Node*> children = node->get_children();
+			std::vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
 
 			// check if key is found
 			if ((0 != keys.size()) && (index - keys.begin() != keys.size()) && key == keys[index - keys.begin()])
 			{
 				// recursively repeat by searching the path through the corresponding right child index
-				Search_Path(children[(index - keys.begin()) + 1], key, path);
+				search_path(children[(index - keys.begin()) + 1], key, path);
 			}
 
 			// if key is not found
 			else
 			{
 				// recursively repeat by searching the path through the corresponding left child index
-				Search_Path(children[index - keys.begin()], key, path);
+				search_path(children[index - keys.begin()], key, path);
 			}
 		}
 	}
-	void Destroy(Node* node)
+	void destroy(Node* node)
 	{
 		// recursively repeat the function to delete all the nodes level by level, startin g with the leaf nodes
-		if (!node->Get_IsLeaf())
+		if (!node->get_is_leaf())
 		{
-			vector<Node*> children = node->Get_Children();
-			for (vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+			std::vector<Node*> children = node->get_children();
+			for (std::vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
 			{
-				Destroy(*index);
+				destroy(*index);
 			}
 		}
 		delete (node);
 	}
 
-	void Reveal_Tree(Node* node)
+	void debug_node(Node* node)
 	{
 		// check if tree is empty
 		if (NULL == node)
 		{
-			cout << endl
+			std::cout << std::endl
 				<< "Root Node: Null";
 			return;
 		}
 
 		// check if current node is a leaf node
-		if (node->Get_IsLeaf())
+		if (node->get_is_leaf())
 		{
-			cout << endl
+			std::cout << std::endl
 				<< "Leaf Node: ";
 		}
 
 		// if current node is a internal node
 		else
 		{
-			cout << endl
+			std::cout << std::endl
 				<< "Internal Node: ";
 		}
 
 		// display the keys
-		vector<uint64_t> keys = node->Get_Keys();
-		for (vector<uint64_t>::iterator index = keys.begin(); index != keys.end(); index++)
+		std::vector<uint64_t> keys = node->get_keys();
+		for (std::vector<uint64_t>::iterator index = keys.begin(); index != keys.end(); index++)
 		{
-			cout << *index << " ";
+			std::cout << *index << " ";
 		}
-		cout << endl;
+		std::cout << std::endl;
 
 		// check if internal node to continue revelation of the next level
-		if (!node->Get_IsLeaf())
+		if (!node->get_is_leaf())
 		{
 			// display the keys in the children of the current internal node
-			vector<Node*> children = node->Get_Children();
-			cout << "children" << endl
-				<< "--------" << endl;
-			for (vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+			std::vector<Node*> children = node->get_children();
+			std::cout << "children" << std::endl
+				<< "--------" << std::endl;
+			for (std::vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
 			{
-				vector<uint64_t> childKeys = (*index)->Get_Keys();
-				for (vector<uint64_t>::iterator i = childKeys.begin(); i != childKeys.end(); i++)
+				std::vector<uint64_t> childKeys = (*index)->get_keys();
+				for (std::vector<uint64_t>::iterator i = childKeys.begin(); i != childKeys.end(); i++)
 				{
-					cout << *i << " ";
+					std::cout << *i << " ";
 				}
-				cout << endl;
+				std::cout << std::endl;
 			}
 
 			// recursively repeat revelation of the next level
-			for (vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
+			for (std::vector<Node*>::iterator index = children.begin(); index != children.end(); index++)
 			{
-				Reveal_Tree(*index);
+				debug_node(*index);
 			}
 		}
 	}
 
 public:
-	BPlusTree(int m) {
-		order = m;
-		root = NULL;
+	BPlusTree(int order_) : order{ order_ }, root{ NULL } {
+
 	}
 
-	void Insert(uint64_t key, int8_t value)
+	void insert(uint64_t key, int8_t value)
 	{
 		// check if tree is empty
 		if (NULL == root)
 		{
 			// Irrespective of the order, root is always a leaf node for
 			// the first insertion. So, create a new leaf node.
-			root = new LeafNode;
-			root->Insert(key, value);
+			root = new LeafNode(order);
+			root->insert_value(key, value);
 		}
 
 		// if it is a subsequent insertion
@@ -320,32 +311,32 @@ public:
 		{
 			Node* leftNode = NULL;
 			Node* rightNode = NULL;
-			uint64_t* keyToParent = new uint64_t;
+			uint64_t key_to_parent = 0;
 			bool rootPopped = false;
 
 			// obtain the search path from the root to leaf node and push it on to a stack
-			stack<Node*>* path = new stack<Node*>;
-			Search_Path(root, key, path);
+			std::stack<Node*> path;
+			search_path(root, key, &path);
 
 			// insert the key-value pair in the leaf node
-			path->top()->Insert(key, value);
+			path.top()->insert_value(key, value);
 
 			// Split the current node and insert the middle key & children in to the parent. Perform
 			// this as long as there is an imbalance in the tree, moving up the stack every iteration.
-			while (path->top()->Get_Keys().size() == order)
+			while (path.top()->get_keys().size() == order)
 			{
 				// Update the current node as the left half and return the right half. Also
 				// obtain the middle element, which is the key to be moved up to the parent.
-				leftNode = path->top();
-				rightNode = leftNode->Split(keyToParent);
+				leftNode = path.top();
+				rightNode = leftNode->split(&key_to_parent, order);
 
 				// check if currently split node is not the root node
-				path->pop();
-				if (!path->empty())
+				path.pop();
+				if (!path.empty())
 				{
 					// Insert the middle key and the right half in to
 					// the parent. The parent will be an internal node.
-					path->top()->Insert(*keyToParent, rightNode);
+					path.top()->insert_right(key_to_parent, rightNode);
 				}
 
 				// if currently split node is the root node
@@ -361,27 +352,26 @@ public:
 			if (rootPopped)
 			{
 				// create a new internal node
-				InternalNode* tempRoot = new InternalNode;
+				InternalNode* tempRoot = new InternalNode(order);
 
 				// insert the left and the right halves as the children of this new internal node
-				tempRoot->Insert(*keyToParent, leftNode, rightNode);
+				tempRoot->insert_left_right(key_to_parent, leftNode, rightNode);
 
 				// mark this new internal node as the root of the tree
 				root = tempRoot;
 			}
 
-			delete (keyToParent);
-			delete (path);
+		
 		}
 	}
-	int8_t Search(uint64_t key)
+	int8_t search(uint64_t key)
 	{
 		int8_t ret = 0;
 
 		// check if tree is empty
 		if (NULL == root)
 		{
-			//outputFile << "Null" << endl;
+			//outputFile << "Null" << std::endl;
 		}
 
 		// if it is a vaild search
@@ -390,13 +380,13 @@ public:
 			int i = 0;
 
 			// obtain the search path from root to leaf node and push it on to a stack
-			stack<Node*>* path = new stack<Node*>;
-			Search_Path(root, key, path);
+			std::stack<Node*> path;
+			search_path(root, key, &path);
 
 			// search for the key in the leaf node, which is at the top of the stack
-			vector<uint64_t> keys = path->top()->Get_Keys();
-			vector<int8_t> values = path->top()->Get_Values();
-			vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
+			std::vector<uint64_t> keys = path.top()->get_keys();
+			std::vector<int8_t> values = path.top()->get_values();
+			std::vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key);
 			auto b = index - keys.begin();
 
 			// check if key is found
@@ -404,7 +394,7 @@ public:
 			{
 				// display the values
 				//outputFile << values[index - keys.begin()] << ",";
-				//cout << "FOUND : " << (int)values[index - keys.begin()] << endl;
+				//std::cout << "FOUND : " << (int)values[index - keys.begin()] << std::endl;
 				ret = values[index - keys.begin()];
 
 			}
@@ -412,16 +402,14 @@ public:
 			// if key is not found
 			else
 			{
-				//outputFile << "Null" << endl;
+				//outputFile << "Null" << std::endl;
 			}
-
-			delete (path);
 
 		}
 		return ret;
 
 	}
-	uint64_t Search(uint64_t key1, int8_t num)
+	uint64_t scan(uint64_t key1, int8_t num)
 	{
 		uint64_t ret = 0; //sum
 		int8_t count = 0;
@@ -429,7 +417,7 @@ public:
 		// check if tree is empty
 		if (NULL == root)
 		{
-			//outputFile << "Null" << endl;
+			return ret;
 		}
 
 		// if it is a valid range search
@@ -440,14 +428,14 @@ public:
 			uint64_t firstKey = -1;
 
 			// obtain the search path from root to leaf node and push it on to a stack
-			stack<Node*>* path = new stack<Node*>;
-			Search_Path(root, key1, path);
+			std::stack<Node*> path;
+			search_path(root, key1, &path);
 
 			// search for the key in the leaf node, which is at the top of the stack
-			vector<uint64_t> keys = path->top()->Get_Keys();
-			vector<int8_t> values = path->top()->Get_Values();
-			Node* next = path->top()->Get_Next();
-			vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key1);
+			std::vector<uint64_t> keys = path.top()->get_keys();
+			std::vector<int8_t> values = path.top()->get_values();
+			Node* next = path.top()->get_next();
+			std::vector<uint64_t>::iterator index = lower_bound(keys.begin(), keys.end(), key1);
 
 			// display all the keys in the search range, along with their corresponding values
 			while (1)
@@ -456,9 +444,9 @@ public:
 				if ((index - keys.begin()) == keys.size())
 				{
 					// go to the next leaf node
-					keys = next->Get_Keys();
-					values = next->Get_Values();
-					next = next->Get_Next();
+					keys = next->get_keys();
+					values = next->get_values();
+					next = next->get_next();
 					index = keys.begin();
 				}
 
@@ -500,13 +488,13 @@ public:
 					// check if atleast one key was in the search range
 					if (!firstPass)
 					{
-						//outputFile << endl;
+						//outputFile << std::endl;
 					}
 
 					// if no keys belonged within the search range
 					else
 					{
-						//outputFile << "Null" << endl;
+						//outputFile << "Null" << std::endl;
 					}
 
 					// exit the loop
@@ -517,7 +505,6 @@ public:
 				index++;
 			}
 
-			delete (path);
 		}
 
 		return ret;
@@ -525,12 +512,12 @@ public:
 
 	~BPlusTree()
 	{
-		Destroy(root);
+		destroy(root);
 	}
 
-	void Print_Tree()
+	void debug_tree()
 	{
-		Reveal_Tree(root);
+		debug_node(root);
 	}
 };
 
@@ -545,25 +532,26 @@ public:
 
 	void insert(uint64_t key, int8_t value)
 	{
-		//cout << "INSERT " << key << "," << (int)value << endl;
-		tree.Insert(key, value);
+		//std::cout << "INSERT " << key << "," << (int)value << std::endl;
+		tree.insert(key, value);
 	}
 
 	void update(uint64_t key, int8_t value)
 	{
-		//cout << "UPDATE " << key << "," << (int)value << endl;
-		tree.Insert(key, value);
+		//std::cout << "UPDATE " << key << "," << (int)value << std::endl;
+		tree.insert(key, value);
 	}
 
 	int8_t read(uint64_t key)
 	{
-		//cout << "READ " << key << endl;
-		return tree.Search(key);
+		//std::cout << "READ " << key << std::endl;
+		return tree.search(key);
 	}
 
 	uint64_t scan(uint64_t key, int8_t num)
 	{
-		return tree.Search(key, num);
+		//std::cout << "SCAN " << key << "," << (int)num << std::endl;
+		return tree.scan(key, num);
 	}
 };
 
