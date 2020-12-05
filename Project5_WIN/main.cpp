@@ -329,10 +329,9 @@ public:
 
 			std::stack<Node*> path;
 			search_path(root, key, path);
-			Node* node = path.top(); // leaf node
 
 			// insert the key-value pair in the leaf node
-			node->insert_key_value(key, value);
+			path.top()->insert_key_value(key, value);
 
 			// keys should be at most [ORDER-1]
 			// if there are [ORDER] keys in a node, we need to split!
@@ -343,15 +342,14 @@ public:
 				right_node = left_node->split(&key_to_parent, order);
 
 				path.pop();
-				//node = path.top();
 				
-				// if current node is not root
+				// if split node was not root
 				if (!path.empty())
 				{
 					path.top()->insert_nonempty_internal(key_to_parent, right_node);
 				}
 
-				// if current node is root
+				// if split node was root
 				else
 				{
 					// create a new root
