@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BUILD_DIR=build_hae
+BUILD_DIR=build
 
 rm -rf $BUILD_DIR
 mkdir $BUILD_DIR
