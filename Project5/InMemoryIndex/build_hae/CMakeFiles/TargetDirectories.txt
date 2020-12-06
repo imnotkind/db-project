@@ -1,0 +1,3 @@
+/home/imnotkind/db-project/Project5/InMemoryIndex/build_hae/CMakeFiles/rebuild_cache.dir
+/home/imnotkind/db-project/Project5/InMemoryIndex/build_hae/CMakeFiles/edit_cache.dir
+/home/imnotkind/db-project/Project5/InMemoryIndex/build_hae/CMakeFiles/workload.dir

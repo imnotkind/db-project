@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/imnotkind/db-project/Project5/InMemoryIndex/main.cpp
+stdio.h
+-
+timer.hpp
+/home/imnotkind/db-project/Project5/InMemoryIndex/timer.hpp
+assert.h
+-
+string
+-
+fstream
+-
+iostream
+-
+vector
+-
+string
+-
+iostream
+-
+map
+-
+stack
+-
+algorithm
+-
+
+/home/imnotkind/db-project/Project5/InMemoryIndex/timer.hpp
+stdlib.h
+-
+sys/time.h
+-
+
