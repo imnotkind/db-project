@@ -38,7 +38,7 @@ public:
 		keys.reserve(order); //order(branching factor) = max num of children = max num of keys + 1
 	}
 
-	virtual void upsert_key_value(uint64_t key, int8_t value) { std::cout << "ERROR : UNCALLABLE" << std::endl; exit(1); }
+	//virtual void upsert_key_value(uint64_t key, int8_t value) { std::cout << "ERROR : UNCALLABLE" << std::endl; exit(1); }
 	virtual void update_key_value(uint64_t key, int8_t value) { std::cout << "ERROR : UNCALLABLE" << std::endl; exit(1); }
 	virtual void insert_key_value(uint64_t key, int8_t value) { std::cout << "ERROR : UNCALLABLE" << std::endl; exit(1); }
 	virtual void insert_nonempty_internal(uint64_t key, Node* right_child) { std::cout << "ERROR : UNCALLABLE" << std::endl; exit(1); }
@@ -334,9 +334,9 @@ public:
 			path.top()->insert_key_value(key, value);
 
 			// keys should be at most [ORDER-1]
-			// if there are [ORDER] keys in a node, we need to split!
+			// if there are [ORDER] keys in a node, we need to split
 			while (path.top()->get_keys().size() == order)
-			{
+			{				
 				// split node and get key to parent (middle key)
 				left_node = path.top();
 				right_node = left_node->split(&key_to_parent, order);
@@ -525,6 +525,8 @@ public:
 	}
 };
 */
+
+/* no need to change from here */
 
 struct Operation {
 	int type;
